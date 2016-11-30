@@ -16,71 +16,72 @@ import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
 
 public class MyClass implements WiimoteListener{
 
-    public void onButtonsEvent(WiimoteButtonsEvent arg0) {
-        System.out.println(arg0);
-        if (arg0.isButtonAPressed()){
-        	System.out.println("Je presse A");
-            //WiiUseApiManager.shutdown();
-        }
-    }
+	public void onButtonsEvent(WiimoteButtonsEvent arg0) {
+		System.out.println(arg0);
+		if (arg0.isButtonAPressed()){
+			System.out.println("Je presse A");
+			//WiiUseApiManager.shutdown();
+		}
+	}
 
-    public void onIrEvent(IREvent arg0) {
-        System.out.println(arg0);
-    }
+	public void onIrEvent(IREvent arg0) {
+		System.out.println(arg0);
+	}
 
-    public void onMotionSensingEvent(MotionSensingEvent arg0) {
-        System.out.println(arg0);
-    }
+	public void onMotionSensingEvent(MotionSensingEvent arg0) {
+		System.out.println(arg0);
+	}
 
-    public void onExpansionEvent(ExpansionEvent arg0) {
-        System.out.println(arg0);
-    }
+	public void onExpansionEvent(ExpansionEvent arg0) {
+		System.out.println(arg0);
+	}
 
-    public void onStatusEvent(StatusEvent arg0) {
-        System.out.println(arg0);
-    }
+	public void onStatusEvent(StatusEvent arg0) {
+		System.out.println(arg0);
+	}
 
-    public void onDisconnectionEvent(DisconnectionEvent arg0) {
-        System.out.println(arg0);
-    }
+	public void onDisconnectionEvent(DisconnectionEvent arg0) {
+		System.out.println(arg0);
+	}
 
-    public void onNunchukInsertedEvent(NunchukInsertedEvent arg0) {
-        System.out.println(arg0);
-    }
+	public void onNunchukInsertedEvent(NunchukInsertedEvent arg0) {
+		System.out.println(arg0);
+	}
 
-    public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
-        System.out.println(arg0);
-    }
+	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
+		System.out.println(arg0);
+	}
 
-   /* public static void main(String[] args) {
-        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
-        Wiimote wiimote = wiimotes[0];
-        wiimote.activateIRTRacking();
-        wiimote.activateMotionSensing();
-        wiimote.addWiiMoteEventListeners(new MyClass());
-    }*/
+	/*public static void main(String[] args) {
+		System.out.println("Here");
+		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
+		Wiimote wiimote = wiimotes[0];
+		wiimote.activateIRTRacking();
+		wiimote.activateMotionSensing();
+		wiimote.addWiiMoteEventListeners(new MyClass());
+	}*/
 
 	@Override
 	public void onClassicControllerInsertedEvent(ClassicControllerInsertedEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onClassicControllerRemovedEvent(ClassicControllerRemovedEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onGuitarHeroInsertedEvent(GuitarHeroInsertedEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onGuitarHeroRemovedEvent(GuitarHeroRemovedEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
