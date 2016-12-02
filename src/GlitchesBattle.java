@@ -119,6 +119,7 @@ public class GlitchesBattle extends PApplet {
 
 	public void stop() {
 		menuControler.stop();
+		gameControler.stop();
 		super.stop();
 	}
 }

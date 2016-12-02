@@ -5,11 +5,13 @@ import Model.Game;
 import Model.Scene;
 import processing.core.PApplet;
 import processing.core.PImage;
+import Model.Son;
 
 public class GameView {
 	Integer maxTime = null; //new Integer(90); // Exemple : 90 secondes de jeux (null si pas de timer)
 	private PImage imgInfini;
 	private PImage imgBackground;
+	private static Son son;
 	
 	private Game my_model;
 	
@@ -21,6 +23,7 @@ public class GameView {
 	public GameView(Game model, PlayerControler p1, PlayerControler p2) {
 		my_model = model;
 		my_scene = new Scene(my_model.getParent());
+		son = new Son(my_model.getParent(), "../ressources/fight.mp3");
 		player1 = p1;
 		player2 = p2;
 		imgInfini = my_model.getParent().loadImage("../ressources/icon_infini.png");
@@ -53,7 +56,7 @@ public class GameView {
 	}
 
 	public void stopMusic() {
-		
+		son.stop();
 	}
 	
 	public void time() {

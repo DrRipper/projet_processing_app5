@@ -5,7 +5,7 @@ import Model.Menu;
 import Model.Player;
 import processing.core.PFont;
 import processing.core.PImage;
-import projet_graphisme_OLD.Son;
+import Model.Son;
 
 public class MenuView {
 	private static Son son;
@@ -21,7 +21,7 @@ public class MenuView {
 		my_model = m;
 		player1 = p1;
 		player2 = p2;
-		son = new Son(my_model.getParent());
+		son = new Son(my_model.getParent(), "../ressources/music.mp3");
 		font = my_model.getParent().createFont("Georgia",40,true);
 		imgTitle = my_model.getParent().loadImage("../ressources/title_test.png");
 
