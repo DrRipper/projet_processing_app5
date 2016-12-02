@@ -9,16 +9,16 @@ public class Son {
 
 	private PApplet my_parent;
 
-	private AudioSnippet musicMenu;
+	private AudioPlayer musicMenu;
 
 	public Son(PApplet p, String link) {
 		my_parent = p;
 		minim = new Minim(my_parent);
-		musicMenu = minim.loadSnippet(link); // ajouter de la music au jeu
+		musicMenu = minim.loadFile(link); // ajouter de la music au jeu
 		in = minim.getLineIn(); // get voice
 	}
 
-	public AudioSnippet getMusicMenu() {
+	public AudioPlayer getMusicMenu() {
 		return musicMenu;
 	}
 
