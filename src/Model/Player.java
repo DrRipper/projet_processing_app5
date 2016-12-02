@@ -2,6 +2,8 @@ package Model;
 
 import java.awt.Rectangle;
 
+import Controler.PlayerControler;
+import View.PlayerView;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -10,31 +12,43 @@ public class Player {
 	private float my_health;
 	private float my_mana;
 	private boolean my_validity;
+	public PlayerControler controler;
 
 	public final static float MAX_HEALTH = 100;
 	public final static float MAX_MANA = 100;
 
 	private float my_x_initial;
 	private float my_y_initial;
-	
-	private PApplet my_parent;
 
+	private PApplet my_parent;
+	
+	// TODO : int ?
 	private float my_x;
 	private float my_y;
 
 	private PImage me;
 	private int my_height;
 	private int my_width;
-	
+
 	private Player my_ennemie;
 	private Meteorite my_meteorite;
-	
-	public Player(PApplet p, int idx, String img) {
+
+	private boolean right;
+	public HitBox hitbox;
+	public HurtBox hurtbox;
+	public boolean hurting;
+	public int color;
+
+	public final static int RED = 0;
+	public final static int BLUE = 1;
+
+	public Player(PApplet p, int idx, String img, PlayerControler control) {
 		my_parent = p;
 		my_idx = idx;
 		my_health = MAX_HEALTH;
 		my_validity = false;
 		my_mana = 0;
+		controler = control;
 
 		my_y_initial = ((float)my_parent.height)*0.75f;
 		my_x_initial = ((float)my_parent.width)*0.25f*my_idx;
@@ -47,12 +61,23 @@ public class Player {
 		my_height = 100;
 		my_width = 100;
 
+		if (idx == 1) {
+			color = RED;
+			right = true;
+		}
+		else {
+			color = BLUE;
+			right = false;
+		}
+
+		initBox();
+
 	}
-	
+
 	public int getIdx() {
 		return my_idx;
 	}
-	
+
 	public PApplet getParent() {
 		return my_parent;
 	}
@@ -61,11 +86,11 @@ public class Player {
 		my_ennemie = p;
 		my_meteorite = new Meteorite(my_parent, this, my_ennemie);
 	}
-	
+
 	public Meteorite getMeteorite() {
 		return my_meteorite;
 	}
-	
+
 	public void setX(float x) {
 		if (x>=0 && x<=my_parent.width-my_width )
 			if (!collision_with_ennemie(true, x, my_y))
@@ -93,7 +118,7 @@ public class Player {
 	public int getHeight() {
 		return my_height;
 	}
-	
+
 	public void set_validity(boolean validity) {
 		my_validity = validity; 
 	}
@@ -121,7 +146,7 @@ public class Player {
 	public float get_mana() {
 		return my_mana;
 	}
-	
+
 	public boolean collision_with_ennemie(boolean duringWalking, float x, float y) {
 		return getBounds(duringWalking, x, y).intersects(my_ennemie.getBounds(duringWalking, my_ennemie.getX(), my_ennemie.getY()));
 	}
@@ -143,5 +168,36 @@ public class Player {
 
 	public Player getEnnemie() {
 		return my_ennemie;
+	}
+
+	private void initBox() {
+		boolean displayBoxes = false;
+		hitbox = new HitBox(my_parent, right);
+		hitbox.displaying = displayBoxes;
+		hurtbox = new HurtBox(my_parent, right);
+		hurtbox.displaying = displayBoxes;
+	}
+
+	public void changerSens() {
+		right = !right;
+		hitbox.setSens(right);
+		hurtbox.setSens(right);
+	}
+
+	public boolean right() {
+		return right;
+	}
+
+	public void move(int dx, int dy) {
+		my_x += dx;
+		my_y += dy;
+		// tester vitesse ? moving?
+		if ((right && dx<0) || (!right && dx>0))
+			changerSens();
+	}
+
+	public PlayerView getView() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

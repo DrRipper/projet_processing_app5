@@ -9,13 +9,21 @@ public class PlayerControler {
 	private PlayerView my_view;
 	
 	public PlayerControler(PApplet p, int idx, String img) {
-		my_model = new Player(p,idx, img);
+		my_model = new Player(p,idx, img, this);
 		my_view = new PlayerView(my_model);
-		
 	}
 	
 	public void setEnnemie(PlayerControler p) {
 		my_model.setEnnemie(p.getModel());
+	}
+	
+	public void update() {
+		int x = my_model.getX();
+		int y = my_model.getY();
+		my_model.hitbox.update(x, y);
+		if (my_model.hurting) {
+			my_model.hurtbox.update(x, y);
+	    }
 	}
 	
 	public Player getModel() {
@@ -40,7 +48,23 @@ public class PlayerControler {
 	}
 
 	public boolean hit() {
-		if (my_model.collision_with_ennemie(false, 0, 0)) {
+		my_model.hurting = true;
+		my_view.slash();
+		if(my_model.hurtbox.collision(my_model.getEnnemie().hitbox)) {
+	    	  my_model.getEnnemie().getView().hurt();
+	    	  if (my_model.get_mana()+5<Player.MAX_MANA)
+					my_model.set_mana(my_model.get_mana()+5);
+				else 
+					my_model.set_mana(Player.MAX_MANA);
+
+				my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-5);
+				my_model.getParent().draw();
+				return true;
+	    }
+		return false;
+		
+		
+		/*if (my_model.collision_with_ennemie(false, 0, 0)) {
 			if (my_model.get_mana()+5<Player.MAX_MANA)
 				my_model.set_mana(my_model.get_mana()+5);
 			else 
@@ -50,7 +74,8 @@ public class PlayerControler {
 			my_model.getParent().draw();
 			return true;
 		}
-		return false;
+		return false;*/
+		
 	}
 	
 	public void magicalHit() {
@@ -60,5 +85,10 @@ public class PlayerControler {
 			my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-30);
 		}
 		my_model.getParent().draw();
+	}
+	
+	public void move(int dx, int dy) {
+		my_model.move(dx, dy);
+		my_view.walk();
 	}
 }

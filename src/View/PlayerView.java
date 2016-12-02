@@ -1,12 +1,38 @@
 package View;
 
+import java.util.HashMap;
 import Model.Player;
+import processing.core.PApplet;
+import Model.PairAnim;
+import Model.Animation;
 
 public class PlayerView {
 	private Player my_model;
-	
+	private int deltaX = 512/2;
+	private int deltaY = 512-50;
+	private String pathAnims = "./ressources/character/";
+	public PApplet parent;
+	public HashMap<String,PairAnim> anims;
+	public PairAnim currentAnim;
+	public PairAnim lastAnim;
+
 	public PlayerView(Player p) {
 		my_model = p;
+		parent = my_model.getParent();
+		if (my_model.color == Player.BLUE) 
+			pathAnims += "blue/";
+		else
+			pathAnims += "red/";
+		anims = new HashMap<String,PairAnim>();
+		addAnimation("death", 1, true);
+		addAnimation("hurt", 11, false);
+		addAnimation("idle", 15, true);
+		addAnimation("jump", 12, false);
+		addAnimation("run", 8, true);
+		addAnimation("slash", 11, false);
+		addAnimation("slashjump", 12, false);
+		addAnimation("walk", 8, true);
+		idle();
 	}
 
 	void display_pv() {
@@ -58,7 +84,7 @@ public class PlayerView {
 		my_model.getParent().rect((float) (((my_model.getIdx()*1.5)-1.5)*(my_model.getParent().width/4)+10), 30, rectWidth, 10);
 
 	}
-	
+
 	void display_when_wait(){
 		//my_parrent.noFill();
 		//my_parrent.stroke(255);
@@ -78,11 +104,19 @@ public class PlayerView {
 		draw_arm_valid();
 		draw_legs_valid();
 	}
-	
+
 	void displayPlayer() {
-		my_model.getParent().image(my_model.getSprite(), my_model.getX(), my_model.getY(), my_model.getWidht(), my_model.getHeight());
+		//my_model.getParent().image(my_model.getSprite(), my_model.getX(), my_model.getY(), my_model.getWidht(), my_model.getHeight());
+		int x = my_model.getX();
+		int y = my_model.getY();
+		boolean lastFrame = sens(currentAnim).display(x-deltaX,y-deltaY);
+	    if (!sens(currentAnim).loopable)
+	      if (lastFrame) {
+	        currentAnim = lastAnim;
+	        my_model.hurting = false;
+	      }
 	}
-	
+
 	void draw_head_wait() {
 		for(int i= 0; i<16;i++){
 
@@ -97,7 +131,7 @@ public class PlayerView {
 		}
 
 	}
-	
+
 	void draw_body_wait() {
 		float y = (my_model.getParent().height/4)+60;
 		float x = my_model.getIdx()*(my_model.getParent().width/4)-40;
@@ -195,5 +229,46 @@ public class PlayerView {
 		my_model.getParent().line (x+w, y+h, x+w, y+h+h); // right line | 
 		my_model.getParent().line (x, y+h, x, y+h+h);  // left line | 
 	}
+
+	// loopable anims
+	public void idle() {
+		lastAnim = currentAnim = anims.get("idle");
+	}
+	public void run() {
+		lastAnim = currentAnim = anims.get("run");
+	}
+	public void walk() {
+		lastAnim = currentAnim = anims.get("walk");
+	}
+	public void death() {
+		lastAnim = currentAnim = anims.get("death");
+	}
+
+	// not loopable anims
+	public void hurt() {
+		currentAnim = anims.get("hurt");
+	}
+	public void jump() {
+		currentAnim = anims.get("jump");
+	}
+	public void slash() {
+		currentAnim = anims.get("slash"); 
+	}
+	public void slashjump() {
+		currentAnim = anims.get("slashjump"); 
+	}
+
+	private void addAnimation(String nameAnim, int count, boolean loop) {
+		String l_path = pathAnims+"l_"+nameAnim+"/";
+		String r_path = pathAnims+"r_"+nameAnim+"/";
+		PairAnim panims = new PairAnim();
+		panims.right = new Animation(parent, r_path,count, loop, nameAnim);
+		panims.left = new Animation(parent, l_path,count, loop, nameAnim);
+		anims.put(nameAnim, panims);
+	}
+	
+	private Animation sens(PairAnim pa){
+	    return (my_model.right())? pa.right : pa.left;
+	  }
 
 }
