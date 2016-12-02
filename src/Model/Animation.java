@@ -11,7 +11,7 @@ public class Animation {
 	String name;
 	PApplet parent;
 
-	Animation(PApplet p, String imagePrefix, int count, boolean loop, String n) {
+	public Animation(PApplet p, String imagePrefix, int count, boolean loop, String n) {
 		parent = p;
 		imageCount = count;
 		images = new PImage[imageCount];
@@ -26,7 +26,7 @@ public class Animation {
 	}
 
 	// vrai quand c'est la derniere frame de l'animation
-	boolean display(float xpos, float ypos) {
+	public boolean display(int xpos, int ypos) {
 		frame = (frame+1) % imageCount;
 		parent.image(images[frame], xpos, ypos);
 		return (frame == imageCount-1);

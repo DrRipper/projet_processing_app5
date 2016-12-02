@@ -2,7 +2,7 @@ package Model;
 
 import processing.core.PApplet;
 
-class HurtBox extends Box {
+public class HurtBox extends Box {
 
 	public HurtBox(PApplet p, boolean right) {
 		super(p);

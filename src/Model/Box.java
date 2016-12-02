@@ -4,7 +4,7 @@ import processing.core.PApplet;
 
 class Box {
 
-	public float x, y, dx, dy, w, h;
+	public int x, y, dx, dy, w, h;
 	public boolean displaying = false;
 	public short r=0, v=0, b=0, a=100;
 	private PApplet parent;
@@ -13,7 +13,7 @@ class Box {
 		parent = p;
 	}
 
-	public void update(float x, float y) {
+	public void update(int x, int y) {
 		this.x = x;
 		this.y = y;
 		if (displaying) {
@@ -24,7 +24,7 @@ class Box {
 	}
 
 	public boolean collision(Box b) {
-		float x1 = x-dx,
+		int x1 = x-dx,
 				y1 = y-dy,
 				x2 = b.x-b.dx,
 				y2 = b.y-b.dy;
