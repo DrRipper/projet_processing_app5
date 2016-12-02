@@ -70,10 +70,10 @@ public class GlitchesBattle extends PApplet {
 			}
 		} else if(state == IN_GAME){ // début du combat
 			gameControler.display();
-			//if (gameControler.getModel().isGameFinish())
-				//state = END_SCREEN;
+			if (gameControler.getModel().isGameFinish())
+				state = END_SCREEN;
 		} else if (state == END_SCREEN) {
-			//initAll();
+			initAll();
 		}
 	}
 

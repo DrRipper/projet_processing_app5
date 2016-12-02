@@ -2,6 +2,7 @@ package View;
 
 import Controler.PlayerControler;
 import Model.Game;
+import Model.Scene;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -12,11 +13,14 @@ public class GameView {
 	
 	private Game my_model;
 	
+	private Scene my_scene;
+	
 	private PlayerControler player1;
 	private PlayerControler player2;
 	
 	public GameView(Game model, PlayerControler p1, PlayerControler p2) {
 		my_model = model;
+		my_scene = new Scene(my_model.getParent());
 		player1 = p1;
 		player2 = p2;
 		imgInfini = my_model.getParent().loadImage("../ressources/icon_infini.png");
@@ -24,8 +28,11 @@ public class GameView {
 	}
 	
 	public boolean display() {
+		
 		my_model.getParent().background(0, 0, 0);
-		my_model.getParent().image(imgBackground, 0, 0, my_model.getParent().width, my_model.getParent().height);
+		
+		my_scene.display();
+		//my_model.getParent().image(imgBackground, 0, 0, my_model.getParent().width, my_model.getParent().height);
 
 		// on affiche les barres de PV et de mana
 		player1.getView().display_pv();
@@ -65,6 +72,6 @@ public class GameView {
 	
 	
 	public void drawScene() {
-		
+		my_scene.display();
 	}
 }
