@@ -20,7 +20,7 @@ public class GameView {
 		player1 = p1;
 		player2 = p2;
 		imgInfini = my_model.getParent().loadImage("../ressources/icon_infini.png");
-		//imgBackground = my_model.getParent().loadImage("../ressources/fond1.jpg");
+		imgBackground = my_model.getParent().loadImage("../ressources/fond1.jpg");
 	}
 	
 	public boolean display() {
