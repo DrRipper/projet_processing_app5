@@ -11,10 +11,10 @@ public class Son {
 
 	private AudioSnippet musicMenu;
 
-	public Son(PApplet p) {
+	public Son(PApplet p, String link) {
 		my_parent = p;
 		minim = new Minim(my_parent);
-		musicMenu = minim.loadSnippet("../ressources/music.mp3"); // ajouter de la music au jeu
+		musicMenu = minim.loadSnippet(link); // ajouter de la music au jeu
 		in = minim.getLineIn(); // get voice
 	}
 
