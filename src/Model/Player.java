@@ -25,6 +25,8 @@ public class Player {
 	// TODO : int ?
 	private float my_x;
 	private float my_y;
+	private int deltaX;
+	private int deltaY;
 
 	private PImage me;
 	private int my_height;
@@ -189,8 +191,8 @@ public class Player {
 	}
 
 	public void move(int dx, int dy) {
-		my_x += dx;
-		my_y += dy;
+		deltaX = dx;
+		deltaY = dy;
 		// tester vitesse ? moving?
 		if ((right && dx<0) || (!right && dx>0))
 			changerSens();
@@ -199,5 +201,14 @@ public class Player {
 	public PlayerView getView() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void update() {
+		my_x += deltaX;
+		my_y += deltaY;
+		hitbox.update((int)my_x, (int)my_y);
+		if (hurting) {
+			hurtbox.update((int)my_x, (int)my_y);
+	    }
 	}
 }
