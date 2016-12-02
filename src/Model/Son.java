@@ -1,4 +1,4 @@
-package projet_graphisme;
+package Model;
 
 import ddf.minim.*;
 import processing.core.PApplet;

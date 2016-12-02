@@ -1,4 +1,4 @@
-package projet_graphisme;
+package projet_graphisme_OLD;
 import java.awt.Rectangle;
 
 import processing.core.PApplet;
@@ -25,7 +25,7 @@ class Player {
 	private int my_height;
 	private int my_width;
 
-	private Meteorite my_meteorite;	
+	private Meteorite1 my_meteorite;	
 	
 	private Player my_ennemie;
 
@@ -51,15 +51,17 @@ class Player {
 
 	}
 
+	// OK
 	public void setEnnemie(Player p) {
 		my_ennemie = p;
-		my_meteorite = new Meteorite(my_parrent, this, my_ennemie);
+		my_meteorite = new Meteorite1(my_parrent, this, my_ennemie);
 	}
 
 	void displayPlayer() {
 		my_parrent.image(me, my_x, my_y, my_width, my_height);
 	}
 
+	// OK
 	void setX(float x) {
 		if (x>=0 && x<=my_parrent.width-my_width )
 			if (!collision_with_ennemie(true, x, my_y))
@@ -74,16 +76,19 @@ class Player {
 		}
 	}
 
+	// OK
 	void setY(float y) {
 		if (y>=0 && y<=my_parrent.height-my_height)
 			if (!collision_with_ennemie(true, my_x, y))
 				my_y = y;
 	}
 
+	// OK
 	int getX() {
 		return  Math.round(my_x);
 	}
 
+	// OK
 	int getY() {
 		return  Math.round(my_y);
 	}
@@ -136,18 +141,22 @@ class Player {
 		return false;
 	}
 
+	// OK
 	public int getWidht() {
 		return my_width;
 	}
 
+	// ok
 	public int getHeight() {
 		return my_height;
 	}
 
+	// OK
 	public boolean collision_with_ennemie(boolean duringWalking, float x, float y) {
 		return getBounds(duringWalking, x, y).intersects(my_ennemie.getBounds(duringWalking, my_ennemie.getX(), my_ennemie.getY()));
 	}
 
+	// OK
 	public Rectangle getBounds(boolean duringWalking, float x, float y) {
 		if (duringWalking)
 			return new Rectangle((int)x, (int)y, my_width, my_height);
@@ -257,28 +266,29 @@ class Player {
 		my_parrent.line (x, y+h, x, y+h+h);  // left line | 
 	}
 
+	// OK
 	void set_validity(boolean validity) {
 		my_validity = validity; 
 	}
-
+	// OK
 	boolean get_validity() {
 		return my_validity; 
 	}
-
+	// OK
 	void set_mana(float mana) {
 		if (mana>=0 && mana<=MAX_MANA)
 			my_mana = mana;
 	}
-
+	// OK
 	void set_pv(float pv) {
 		if (pv>=0 && pv<=MAX_MANA)
 			my_health = pv;
 	}
-
+	// OK
 	float get_pv() {
 		return my_health;
 	}
-
+	// OK
 	float get_mana() {
 		return my_mana;
 	}

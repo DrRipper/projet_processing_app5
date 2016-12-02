@@ -1,4 +1,4 @@
-package projet_graphisme;
+package projet_graphisme_OLD;
 
 import processing.core.PFont;
 import processing.core.PImage;
