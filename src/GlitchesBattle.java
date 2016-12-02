@@ -24,13 +24,13 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	public void settings(){
-		size(1000, 900, P3D);
+		size(1000, 900/*, P3D*/);
 		smooth();
 	}
 
 	public void setup(){
-		lights();
-		ambientLight(51, 102, 126);
+		/*lights();
+		ambientLight(51, 102, 126);*/
 
 		state = WAITING_PLAYER;
 
@@ -119,7 +119,6 @@ public class GlitchesBattle extends PApplet {
 
 	public void stop() {
 		menuControler.stop();
-		gameControler.stop();
 		super.stop();
 	}
 }

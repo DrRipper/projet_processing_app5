@@ -32,10 +32,14 @@ public class GameView {
 	
 	public boolean display() {
 		
+		if (son.getMusicMenu().isPlaying() == false){
+			son.getMusicMenu().play(); //rewind() possible
+		}
+		
 		my_model.getParent().background(0, 0, 0);
 		
-		my_scene.display();
-		//my_model.getParent().image(imgBackground, 0, 0, my_model.getParent().width, my_model.getParent().height);
+		//my_scene.display();
+		my_model.getParent().image(imgBackground, 0, 0, my_model.getParent().width, my_model.getParent().height);
 
 		// on affiche les barres de PV et de mana
 		player1.getView().display_pv();
