@@ -38,11 +38,15 @@ public class MenuView {
 		my_model = m;
 		player1 = p1;
 		player2 = p2;
+
 		son_music = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/music.mp3");
 		
 		font_title = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",100,true);
 		font_state = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",50,true);
-		imgTitle = my_model.getParent().loadImage("../ressources/title_test.png");
+		//son = new Son(my_model.getParent(), "../ressources/music.mp3");
+		//font = my_model.getParent().createFont("Georgia",40,true);
+
+imgTitle = my_model.getParent().loadImage("../ressources/title_test.png");
 
 		name_player1 = my_model.getParent().loadImage("../ressources/name_player1.png");
 		name_player2 = my_model.getParent().loadImage("../ressources/name_player2.png");

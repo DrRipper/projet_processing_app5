@@ -16,11 +16,13 @@ public class Son {
 		minim = m;
 		music = minim.loadFile(title); // ajouter de la music au jeu
 		//music.mute();
+
 		in = minim.getLineIn(); // get voice
 	}
 
 	public AudioPlayer getMusicMenu() {
 		return music;
+
 	}
 
 	public AudioInput getVoice() {

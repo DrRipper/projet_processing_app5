@@ -19,12 +19,7 @@ public class PlayerControler {
 	}
 	
 	public void update() {
-		int x = my_model.getX();
-		int y = my_model.getY();
-		my_model.hitbox.update(x, y);
-		if (my_model.hurting) {
-			my_model.hurtbox.update(x, y);
-	    }
+		my_model.update();
 	}
 	
 	public Player getModel() {
@@ -37,6 +32,7 @@ public class PlayerControler {
 	
 	public void set_validity(boolean state) {
 		if (state != my_model.get_validity()) {
+			System.out.println("HERE !!!");
 			my_view.play_validation();
 			my_view.jump();
 		}
@@ -60,7 +56,7 @@ public class PlayerControler {
 		my_model.hurting = true;
 		my_view.slash();
 		if(my_model.hurtbox.collision(my_model.getEnnemie().hitbox)) {
-	    	  my_model.getEnnemie().getView().hurt();
+	    	  my_model.getEnnemie().controler.getView().hurt();
 	    	  if (my_model.get_mana()+5<Player.MAX_MANA)
 					my_model.set_mana(my_model.get_mana()+5);
 				else 
@@ -99,5 +95,13 @@ public class PlayerControler {
 	public void move(int dx, int dy, int dz) {
 		my_model.move(dx, dy, dz);
 		my_view.walk();
+		System.out.println("PlayerControler.move dx="+dx + " dy="+ dy);
+		System.out.println("Player.x="+my_model.getX() + " Player.y="+ my_model.getX());
+	}
+	
+	public void idle() {
+		my_view.idle();
+		my_model.move(0, 0, 0);
+		my_model.hurting = false;
 	}
 }

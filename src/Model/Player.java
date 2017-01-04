@@ -28,6 +28,9 @@ public class Player {
 	private float my_y;
 	private float my_z;
 	
+	private int deltaX;
+	private int deltaY;
+
 	private PImage me;
 	private int my_height;
 	private int my_width;
@@ -206,6 +209,7 @@ public class Player {
 		my_x += dx;
 		my_y += dy;
 		my_z += dz;
+
 		// tester vitesse ? moving?
 		if ((right && dx<0) || (!right && dx>0))
 			changerSens();
@@ -214,5 +218,14 @@ public class Player {
 	public PlayerView getView() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void update() {
+		my_x += deltaX;
+		my_y += deltaY;
+		hitbox.update((int)my_x, (int)my_y);
+		if (hurting) {
+			hurtbox.update((int)my_x, (int)my_y);
+	    }
 	}
 }

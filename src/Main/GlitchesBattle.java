@@ -33,20 +33,23 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	public void settings(){
-		size(1000, 900, P3D);
+		size(1000, 900/*, P3D*/);
+		
 		smooth();
 	}
 
 	public void setup(){
-		lights();
-		ambientLight(51, 102, 126);
-
+		/*lights();
+		ambientLight(51, 102, 126);*/
+		frameRate(30);
 		state = WAITING_PLAYER;
 
 		minim = new Minim(this);
 
 		initPlayersSettings();		
 		initMenus();
+
+		
 	}
 
 	public void initAll() {
@@ -89,6 +92,8 @@ public class GlitchesBattle extends PApplet {
 		} else if (state == END_SCREEN) {
 			initAll();
 		}
+		player1.update();
+		player2.update();
 	}
 
 	public void keyPressed() {
@@ -132,32 +137,62 @@ public class GlitchesBattle extends PApplet {
 			int increment = 10;
 			// PLAYER 1
 			if (key  == 'z' || key == 'Z') {
-				player1.setZ(player1.getModel().getZ()-100);
+				//player1.setZ(player1.getModel().getZ()-100);
+				player1.move(0, 0, -increment);
 			} else if (key  == 'q' || key == 'Q') {
-				player1.setX(player1.getModel().getX()-increment);
+				player1.move(-increment, 0, 0);
 			} else if (key  == 'd' || key == 'D') {
-				player1.setX(player1.getModel().getX()+increment);
+				player1.move(increment, 0, 0);
 			} else if (key  == 's' || key == 'S') {
-				player1.setZ(player1.getModel().getZ()+100);
+				//player1.setZ(player1.getModel().getZ()+100);
+				player1.move(0, 0, increment);
 			} else if (key == 'a' || key == 'A') {
 				player1.hit();
 			}  else if (key == 'e' || key == 'E') {
 				player1.magicalHit();
 			} // PLAYER 2
 			else if (key  == 'i' || key == 'I') {
-				player2.setZ(player2.getModel().getZ()-100);
+				//player2.setZ(player2.getModel().getZ()-100);
+				player2.move(0, 0, -increment);
 			} else if (key  == 'j' || key == 'J') {
-				player2.setX(player2.getModel().getX()-increment);
+				player2.move(-increment, 0, 0);
 			} else if (key  == 'l' || key == 'L') {
-				player2.setX(player2.getModel().getX()+increment);
+				player2.move(increment, 0, 0);
 			} else if (key  == 'k' || key == 'K') {
 				player2.setZ(player2.getModel().getZ()+100);
+				player2.move(0, 0, increment);
 			} else if (key == 'u' || key == 'U') {
 				player2.hit();
 			}  else if (key == 'o' || key == 'O') {
 				player2.magicalHit();
 			}else if (key == 'm')
 				cam ++;
+		}
+	}
+	
+	public void keyReleased() {
+		if (state != WAITING_PLAYER) {
+			int increment = 10;
+			// PLAYER 1
+			if (key  == 'z' || key == 'Z') {
+				player1.idle();
+			} else if (key  == 'q' || key == 'Q') {
+				player1.idle();
+			} else if (key  == 'd' || key == 'D') {
+				player1.idle();
+			} else if (key  == 's' || key == 'S') {
+				player1.idle();
+			} 
+			// PLAYER 2
+			else if (key  == 'i' || key == 'I') {
+				player2.idle();
+			} else if (key  == 'j' || key == 'J') {
+				player2.idle();
+			} else if (key  == 'l' || key == 'L') {
+				player2.idle();
+			} else if (key  == 'k' || key == 'K') {
+				player2.idle();
+			} 
 		}
 	}
 
