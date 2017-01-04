@@ -1,6 +1,7 @@
 package Controler;
 
 import Model.Player;
+import Model.Son;
 import View.PlayerView;
 import processing.core.PApplet;
 
@@ -9,7 +10,7 @@ public class PlayerControler {
 	private PlayerView my_view;
 	
 	public PlayerControler(PApplet p, int idx, String img) {
-		my_model = new Player(p,idx, img, this);
+		my_model = new Player(p, idx, img, this);
 		my_view = new PlayerView(my_model);
 	}
 	
@@ -35,6 +36,10 @@ public class PlayerControler {
 	}
 	
 	public void set_validity(boolean state) {
+		if (state != my_model.get_validity()) {
+			my_view.play_validation();
+			my_view.jump();
+		}
 		my_model.set_validity(state);
 	}
 
@@ -45,6 +50,10 @@ public class PlayerControler {
 
 	public void setX(int x) {
 		my_model.setX(x);
+	}
+	
+	public void setZ(int z) {
+		my_model.setZ(z);
 	}
 
 	public boolean hit() {
@@ -87,8 +96,8 @@ public class PlayerControler {
 		my_model.getParent().draw();
 	}
 	
-	public void move(int dx, int dy) {
-		my_model.move(dx, dy);
+	public void move(int dx, int dy, int dz) {
+		my_model.move(dx, dy, dz);
 		my_view.walk();
 	}
 }

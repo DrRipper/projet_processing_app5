@@ -52,14 +52,14 @@ public class MyClass implements WiimoteListener{
 		System.out.println(arg0);
 	}
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		System.out.println("Here");
 		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
 		Wiimote wiimote = wiimotes[0];
 		wiimote.activateIRTRacking();
 		wiimote.activateMotionSensing();
 		wiimote.addWiiMoteEventListeners(new MyClass());
-	}*/
+	}
 
 	@Override
 	public void onClassicControllerInsertedEvent(ClassicControllerInsertedEvent arg0) {

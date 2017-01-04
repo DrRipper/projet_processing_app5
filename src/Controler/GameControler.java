@@ -34,4 +34,12 @@ public class GameControler {
 	public void setStartTime(int time) {
 		my_model.setStartTime(time);
 	}
+	
+	public void setMaxTime(Integer time) {
+		my_view.setMaxTime(time);
+	}
+
+	public boolean isDecompting() {
+		return my_view.isDecompting();
+	}
 }

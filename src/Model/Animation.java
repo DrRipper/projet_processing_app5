@@ -26,9 +26,13 @@ public class Animation {
 	}
 
 	// vrai quand c'est la derniere frame de l'animation
-	public boolean display(int xpos, int ypos) {
+	public boolean display(int xpos, int ypos, int zpos) {
 		frame = (frame+1) % imageCount;
+		parent.pushMatrix();
+		parent.translate(0,0, zpos);
 		parent.image(images[frame], xpos, ypos);
+		System.out.println(zpos);
+		parent.popMatrix();
 		return (frame == imageCount-1);
 	}
 }
