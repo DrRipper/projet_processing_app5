@@ -9,26 +9,29 @@ public class Son {
 
 	private PApplet my_parent;
 
-	private AudioPlayer musicMenu;
+	private AudioPlayer  music;
 
-	public Son(PApplet p, String link) {
+	public Son(Minim m, PApplet p, String title) {
 		my_parent = p;
-		minim = new Minim(my_parent);
-		musicMenu = minim.loadFile(link); // ajouter de la music au jeu
+		minim = m;
+		music = minim.loadFile(title); // ajouter de la music au jeu
+		//music.mute();
+
 		in = minim.getLineIn(); // get voice
 	}
 
 	public AudioPlayer getMusicMenu() {
-		return musicMenu;
+		return music;
+
 	}
 
 	public AudioInput getVoice() {
 		return in;
 	}
-	
+
 	public void stop() {
-		musicMenu.close();
-		minim.stop();
+		music.close();
+		//minim.stop();
 	}
 
 }

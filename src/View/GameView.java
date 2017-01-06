@@ -1,6 +1,7 @@
 package View;
 
 import Controler.PlayerControler;
+import Main.GlitchesBattle;
 import Model.Game;
 import Model.Scene;
 import processing.core.PApplet;
@@ -20,27 +21,45 @@ public class GameView {
 	private PlayerControler player1;
 	private PlayerControler player2;
 	
+	private Integer startDecompte;
+	private boolean decompte;
+	
+	
 	public GameView(Game model, PlayerControler p1, PlayerControler p2) {
 		my_model = model;
 		my_scene = new Scene(my_model.getParent());
-		son = new Son(my_model.getParent(), "../ressources/fight.mp3");
+		son = new Son(((GlitchesBattle)my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/fight.mp3");
 		player1 = p1;
 		player2 = p2;
 		imgInfini = my_model.getParent().loadImage("../ressources/icon_infini.png");
 		imgBackground = my_model.getParent().loadImage("../ressources/fond1.jpg");
+		
+		startDecompte = my_model.getParent().millis();
+		decompte = true;
 	}
 	
 	public boolean display() {
+		int joueurEnAvacne = 100;
+		if (player1.getModel().get_pv()>player2.getModel().get_pv()+10)
+			joueurEnAvacne = 0;
+		else if (player2.getModel().get_pv()>player1.getModel().get_pv()+10)
+			joueurEnAvacne = 200;
+
+		my_model.getParent().background(0, 0, 0);
 		
-		if (son.getMusicMenu().isPlaying() == false){
+		/*if (son.getMusicMenu().isPlaying() == false){
 			son.getMusicMenu().play(); //rewind() possible
 		}
 		
-		my_model.getParent().background(0, 0, 0);
+		my_model.getParent().background(0, 0, 0);*/
 		
 		//my_scene.display();
-		my_model.getParent().image(imgBackground, 0, 0, my_model.getParent().width, my_model.getParent().height);
+		//my_model.getParent().image(imgBackground, 0, 0, my_model.getParent().width, my_model.getParent().height);
 
+
+		my_scene.display(joueurEnAvacne);
+		
+		
 		// on affiche les barres de PV et de mana
 		player1.getView().display_pv();
 		player2.getView().display_pv();
@@ -55,12 +74,28 @@ public class GameView {
 		player1.getView().displayPlayer();
 		player2.getView().displayPlayer();
 		
+		if (decompte)
+			displayDecompte();
+		
+		
 		// check end
 		return my_model.isGameFinish();
 	}
 
 	public void stopMusic() {
 		son.stop();
+	}
+	
+	public void displayDecompte() {
+		int elapsed = my_model.getParent().millis() - startDecompte;
+		if ((3 - (elapsed) / 1000)>=0)
+			my_model.getParent().text(3 - (elapsed) / 1000, (my_model.getParent().width/2), (my_model.getParent().height/2)); 
+		else if ((3 - (elapsed) / 1000)==-1)
+		{
+			my_model.getParent().text("GO !", (my_model.getParent().width/2), (my_model.getParent().height/2)); 
+			decompte=false;
+			my_model.setStartTime(my_model.getParent().millis());
+		}
 	}
 	
 	public void time() {
@@ -70,15 +105,20 @@ public class GameView {
 		my_model.getParent().stroke(0);
 
 		if ( maxTime != null) {
-			int elapsed = my_model.getParent().millis() - my_model.getStartTime();
+			int elapsed = decompte ? 0:my_model.getParent().millis() - my_model.getStartTime();
+			//int elapsed = my_model.getParent().millis() - my_model.getStartTime();
 			my_model.getParent().text(maxTime - (elapsed) / 1000, (my_model.getParent().width/2), 40); 
 		}else { // on affiche un symbole infini (pas de temps limite)
 			my_model.getParent().image(imgInfini, (my_model.getParent().width/2)-(imgInfini.width/4)/2, 0, imgInfini.width/4, imgInfini.height/4);
 		} 
 	}
 	
-	
-	public void drawScene() {
-		my_scene.display();
+	public void setMaxTime(Integer time) {
+		maxTime = time;
 	}
+	
+	public boolean isDecompting() {
+		return decompte;
+	}
+	
 }

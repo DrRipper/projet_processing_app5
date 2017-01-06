@@ -11,7 +11,7 @@ public class PlayerControler {
 	private static Son son_damaged;
 	
 	public PlayerControler(PApplet p, int idx, String img) {
-		my_model = new Player(p,idx, img, this);
+		my_model = new Player(p, idx, img, this);
 		my_view = new PlayerView(my_model);
 		son_damaged = new Son(my_model.getParent(), "../ressources/hurt.wav");
 	}
@@ -33,6 +33,11 @@ public class PlayerControler {
 	}
 	
 	public void set_validity(boolean state) {
+		if (state != my_model.get_validity()) {
+			System.out.println("HERE !!!");
+			my_view.play_validation();
+			my_view.jump();
+		}
 		my_model.set_validity(state);
 	}
 
@@ -43,6 +48,10 @@ public class PlayerControler {
 
 	public void setX(int x) {
 		my_model.setX(x);
+	}
+	
+	public void setZ(int z) {
+		my_model.setZ(z);
 	}
 
 	public boolean hit() {
@@ -86,8 +95,8 @@ public class PlayerControler {
 		my_model.getParent().draw();
 	}
 	
-	public void move(int dx, int dy) {
-		my_model.move(dx, dy);
+	public void move(int dx, int dy, int dz) {
+		my_model.move(dx, dy, dz);
 		my_view.walk();
 		System.out.println("PlayerControler.move dx="+dx + " dy="+ dy);
 		System.out.println("Player.x="+my_model.getX() + " Player.y="+ my_model.getX());
@@ -95,7 +104,7 @@ public class PlayerControler {
 	
 	public void idle() {
 		my_view.idle();
-		my_model.move(0, 0);
+		my_model.move(0, 0, 0);
 		my_model.hurting = false;
 	}
 }

@@ -2,22 +2,31 @@ package View;
 
 import java.util.HashMap;
 import Model.Player;
+import Model.Son;
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import Model.PairAnim;
 import Model.Animation;
+import Main.GlitchesBattle;
 
 public class PlayerView {
 	private Player my_model;
 	private int deltaX = 512/2;
 	private int deltaY = 512-50;
+	private int deltaZ = 512-50;
 	private String pathAnims = "./ressources/character/";
 	public PApplet parent;
 	public HashMap<String,PairAnim> anims;
 	public PairAnim currentAnim;
 	public PairAnim lastAnim;
+	private static Son son_validation;
+
 
 	public PlayerView(Player p) {
 		my_model = p;
+
+		son_validation = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/epee.mp3");
+
 		parent = my_model.getParent();
 		if (my_model.color == Player.BLUE) 
 			pathAnims += "blue/";
@@ -33,9 +42,11 @@ public class PlayerView {
 		addAnimation("slashjump", 12, false);
 		addAnimation("walk", 8, true);
 		idle();
+
+		//PVDisplay = parent.createGraphics(parent.width, 100);
 	}
 
-	void display_pv() {
+	public void display_pv() {
 		float rectWidth = 200;
 
 		// Change color
@@ -109,12 +120,13 @@ public class PlayerView {
 		//my_model.getParent().image(my_model.getSprite(), my_model.getX(), my_model.getY(), my_model.getWidht(), my_model.getHeight());
 		int x = my_model.getX();
 		int y = my_model.getY();
-		boolean lastFrame = sens(currentAnim).display(x-deltaX,y-deltaY);
-	    if (!sens(currentAnim).loopable)
-	      if (lastFrame) {
-	        currentAnim = lastAnim;
-	        my_model.hurting = false;
-	      }
+		int z = my_model.getZ();
+		boolean lastFrame = sens(currentAnim).display(x-deltaX,y-deltaY,z);
+		if (!sens(currentAnim).loopable)
+			if (lastFrame) {
+				currentAnim = lastAnim;
+				my_model.hurting = false;
+			}
 	}
 
 	void draw_head_wait() {
@@ -266,9 +278,23 @@ public class PlayerView {
 		panims.left = new Animation(parent, l_path,count, loop, nameAnim);
 		anims.put(nameAnim, panims);
 	}
-	
-	private Animation sens(PairAnim pa){
-	    return (my_model.right())? pa.right : pa.left;
-	  }
 
+	private Animation sens(PairAnim pa){
+		return (my_model.right())? pa.right : pa.left;
+	}
+
+	public PairAnim getCurrentAnim() {
+		return currentAnim;
+	}
+
+	public PairAnim getAnim(String anim) {
+		return anims.get(anim);
+	}
+
+	public void play_validation() {
+		
+		son_validation.getMusicMenu().play(0);
+
+		//	son_validation.getMusicMenu().close();
+	}
 }
