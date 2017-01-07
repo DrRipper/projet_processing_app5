@@ -9,8 +9,8 @@ public class PlayerControler {
 	private Player my_model;
 	private PlayerView my_view;
 	
-	public PlayerControler(PApplet p, int idx, String img) {
-		my_model = new Player(p, idx, img, this);
+	public PlayerControler(PApplet p, int idx) {
+		my_model = new Player(p, idx, this);
 		my_view = new PlayerView(my_model);
 	}
 	
@@ -32,7 +32,6 @@ public class PlayerControler {
 	
 	public void set_validity(boolean state) {
 		if (state != my_model.get_validity()) {
-			System.out.println("HERE !!!");
 			my_view.play_validation();
 			my_view.jump();
 		}
@@ -85,18 +84,19 @@ public class PlayerControler {
 	
 	public void magicalHit() {
 		if(my_model.get_mana() == Player.MAX_MANA) {
-			my_model.getMeteorite().hit();
+			//my_model.getMeteorite().hit();
+			my_view.meteor();
 			my_model.set_mana(0);
 			my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-30);
 		}
-		my_model.getParent().draw();
+		//my_model.getParent().draw();
 	}
 	
 	public void move(int dx, int dy, int dz) {
 		my_model.move(dx, dy, dz);
 		my_view.walk();
-		System.out.println("PlayerControler.move dx="+dx + " dy="+ dy);
-		System.out.println("Player.x="+my_model.getX() + " Player.y="+ my_model.getX());
+		//System.out.println("PlayerControler.move dx="+dx + " dy="+ dy);
+		//System.out.println("Player.x="+my_model.getX() + " Player.y="+ my_model.getX());
 	}
 	
 	public void idle() {

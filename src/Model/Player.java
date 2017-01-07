@@ -28,10 +28,12 @@ public class Player {
 	private float my_y;
 	private float my_z;
 	
+	private float x_meteor;
+	private float y_meteor;
+	
 	private int deltaX;
 	private int deltaY;
 
-	private PImage me;
 	private int my_height;
 	private int my_width;
 
@@ -47,7 +49,7 @@ public class Player {
 	public final static int RED = 0;
 	public final static int BLUE = 1;
 
-	public Player(PApplet p, int idx, String img, PlayerControler control) {
+	public Player(PApplet p, int idx, PlayerControler control) {
 		my_parent = p;
 		my_idx = idx;
 		my_health = MAX_HEALTH;
@@ -63,7 +65,8 @@ public class Player {
 		my_y = my_y_initial;
 		my_z = my_z_initial;
 
-		me = my_parent.loadImage(img);
+		x_meteor = ((float)my_parent.width)*0.25f*(1-my_idx);
+		y_meteor = 0;
 
 		my_height = 100;
 		my_width = 100;
@@ -91,7 +94,7 @@ public class Player {
 
 	public void setEnnemie(Player p) {
 		my_ennemie = p;
-		my_meteorite = new Meteorite(my_parent, this, my_ennemie);
+		//my_meteorite = new Meteorite(my_parent, this, my_ennemie);
 	}
 
 	public Meteorite getMeteorite() {
@@ -150,10 +153,12 @@ public class Player {
 	}
 
 	public void set_pv(float pv) {
-		if (pv>=0 && pv<=MAX_HEALTH)
+		if (pv>0 && pv<=MAX_HEALTH)
 			my_health = pv;
-		else if (pv<0)
+		else if (pv<=0) {
 			my_health = 0;
+			controler.getView().death();
+		}
 	}
 
 	public float get_pv() {
@@ -177,10 +182,6 @@ public class Player {
 			else 
 				return new Rectangle((int)my_x, (int)my_y, my_width, my_height);
 
-	}
-
-	public PImage getSprite() {
-		return me;
 	}
 
 	public Player getEnnemie() {
@@ -227,5 +228,13 @@ public class Player {
 		if (hurting) {
 			hurtbox.update((int)my_x, (int)my_y);
 	    }
+	}
+
+	public int getX_meteor() {
+		return Math.round(x_meteor);
+	}
+	
+	public int getY_meteor() {
+		return Math.round(y_meteor);
 	}
 }

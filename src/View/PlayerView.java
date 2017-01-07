@@ -15,12 +15,15 @@ public class PlayerView {
 	private int deltaY = 512-50;
 	private int deltaZ = 512-50;
 	private String pathAnims = "./ressources/character/";
+	private String pathAnimsMeteor = "./ressources/meteorite/";
 	public PApplet parent;
 	public HashMap<String,PairAnim> anims;
 	public PairAnim currentAnim;
 	public PairAnim lastAnim;
 	private static Son son_validation;
-
+	private boolean meteor = false;
+	
+	private final static int METEOR_SIZE = 140;
 
 	public PlayerView(Player p) {
 		my_model = p;
@@ -41,6 +44,8 @@ public class PlayerView {
 		addAnimation("slash", 11, false);
 		addAnimation("slashjump", 12, false);
 		addAnimation("walk", 8, true);
+		addAnimation("meteor", 10, false);
+
 		idle();
 
 		//PVDisplay = parent.createGraphics(parent.width, 100);
@@ -117,6 +122,16 @@ public class PlayerView {
 	}
 
 	void displayPlayer() {
+		if (meteor) {
+			int xm = my_model.getEnnemie().getX()-METEOR_SIZE;
+			int ym = my_model.getY()-METEOR_SIZE;
+
+			boolean lastFrameMeteor = sens(anims.get("meteor")).display(xm,ym,my_model.getEnnemie().getZ()+1);
+			if (lastFrameMeteor) {
+				meteor = false;
+				my_model.getEnnemie().controler.getView().hurt();
+			}
+		}
 		//my_model.getParent().image(my_model.getSprite(), my_model.getX(), my_model.getY(), my_model.getWidht(), my_model.getHeight());
 		int x = my_model.getX();
 		int y = my_model.getY();
@@ -269,10 +284,22 @@ public class PlayerView {
 	public void slashjump() {
 		currentAnim = anims.get("slashjump"); 
 	}
+	public void meteor() {
+		//currentAnim = anims.get("meteor");
+		meteor = true;
+	}
 
 	private void addAnimation(String nameAnim, int count, boolean loop) {
-		String l_path = pathAnims+"l_"+nameAnim+"/";
-		String r_path = pathAnims+"r_"+nameAnim+"/";
+		String l_path;
+		String r_path;
+		if (nameAnim.equals("meteor"))
+		{
+			l_path = pathAnimsMeteor+"lr_"+nameAnim+"/";
+			r_path = pathAnimsMeteor+"lr_"+nameAnim+"/";
+		}else {
+			l_path = pathAnims+"l_"+nameAnim+"/";
+			r_path = pathAnims+"r_"+nameAnim+"/";
+		}
 		PairAnim panims = new PairAnim();
 		panims.right = new Animation(parent, r_path,count, loop, nameAnim);
 		panims.left = new Animation(parent, l_path,count, loop, nameAnim);
@@ -292,7 +319,7 @@ public class PlayerView {
 	}
 
 	public void play_validation() {
-		
+
 		son_validation.getMusicMenu().play(0);
 
 		//	son_validation.getMusicMenu().close();

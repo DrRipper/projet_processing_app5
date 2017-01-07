@@ -31,7 +31,6 @@ public class Animation {
 		parent.pushMatrix();
 		parent.translate(0,0, zpos);
 		parent.image(images[frame], xpos, ypos);
-		System.out.println(zpos);
 		parent.popMatrix();
 		return (frame == imageCount-1);
 	}

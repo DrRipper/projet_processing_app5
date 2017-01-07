@@ -13,6 +13,7 @@ public class GlitchesBattle extends PApplet {
 	private final static int OPTIONS_SETTINGS = 2;
 	private final static int IN_GAME = 3;
 	private final static int END_SCREEN = 4;
+	private final static int PAUSE = 5;
 
 	private PlayerControler player1;
 	private PlayerControler player2;
@@ -55,8 +56,10 @@ public class GlitchesBattle extends PApplet {
 	public void initAll() {
 		state = WAITING_PLAYER;
 
-		initPlayersSettings();		
+		initPlayersSettings();	
+		System.out.println("PLAYER INIT OK");
 		initMenus();
+		System.out.println("MENU INIT OK");
 	}
 
 	public void initMenus() {
@@ -65,8 +68,8 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	private void initPlayersSettings() {
-		player1 = new PlayerControler(this, 1, "../ressources/p1.png" );
-		player2 = new PlayerControler(this, 3, "../ressources/p2.png"); 
+		player1 = new PlayerControler(this, 1);
+		player2 = new PlayerControler(this, 3); 
 
 		player1.setEnnemie(player2);
 		player2.setEnnemie(player1);
@@ -87,10 +90,14 @@ public class GlitchesBattle extends PApplet {
 			optionsControler.display();	
 		} else if(state == IN_GAME){ // début du combat
 			gameControler.display();
-			if (gameControler.getModel().isGameFinish())
+			if (gameControler.getModel().isGameFinish()) { // TODO
 				state = END_SCREEN;
+				gameControler.isGameFinish(true);
+			}
 		} else if (state == END_SCREEN) {
-			initAll();
+			gameControler.display();
+		} else if (state == PAUSE) {
+			gameControler.display();
 		}
 		player1.update();
 		player2.update();
@@ -165,8 +172,19 @@ public class GlitchesBattle extends PApplet {
 				player2.hit();
 			}  else if (key == 'o' || key == 'O') {
 				player2.magicalHit();
-			}else if (key == 'm')
-				cam ++;
+			}else if (key == 'p' || key == 'P') {
+				state = PAUSE;
+				gameControler.setPauseState(true);
+			}
+		} else if (state == PAUSE) {
+			if (key  == 'a' || key == 'A') {
+				state = IN_GAME;
+				gameControler.setPauseState(false);
+			}
+		} else if (state == END_SCREEN) {
+			if (key == 'a' || key == 'A') {
+				initAll();
+			}
 		}
 	}
 	

@@ -53,7 +53,6 @@ public class MyClass implements WiimoteListener{
 	}
 
 	public static void main(String[] args) {
-		System.out.println("Here");
 		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
 		Wiimote wiimote = wiimotes[0];
 		wiimote.activateIRTRacking();
