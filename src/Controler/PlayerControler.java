@@ -1,5 +1,6 @@
 package Controler;
 
+import Main.GlitchesBattle;
 import Model.Player;
 import Model.Son;
 import View.PlayerView;
@@ -13,7 +14,7 @@ public class PlayerControler {
 	public PlayerControler(PApplet p, int idx) {
 		my_model = new Player(p, idx, this);
 		my_view = new PlayerView(my_model);
-		son_damaged = new Son(my_model.getParent(), "../ressources/hurt.wav");
+		son_damaged = new Son(((GlitchesBattle) p).getMinim(), p, "../ressources/hurt.wav");
 	}
 	
 	public void setEnnemie(PlayerControler p) {
