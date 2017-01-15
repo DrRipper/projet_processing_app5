@@ -8,10 +8,12 @@ import processing.core.PApplet;
 public class PlayerControler {
 	private Player my_model;
 	private PlayerView my_view;
+	private static Son son_damaged;
 	
 	public PlayerControler(PApplet p, int idx) {
 		my_model = new Player(p, idx, this);
 		my_view = new PlayerView(my_model);
+		son_damaged = new Son(my_model.getParent(), "../ressources/hurt.wav");
 	}
 	
 	public void setEnnemie(PlayerControler p) {
@@ -53,6 +55,7 @@ public class PlayerControler {
 
 	public boolean hit() {
 		my_model.hurting = true;
+		son_damaged.getMusicMenu().play();
 		my_view.slash();
 		if(my_model.hurtbox.collision(my_model.getEnnemie().hitbox)) {
 	    	  my_model.getEnnemie().controler.getView().hurt();
