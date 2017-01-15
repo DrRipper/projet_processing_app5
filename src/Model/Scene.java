@@ -10,6 +10,8 @@ public class Scene {
 	PImage floor_texture;
 	PImage bordures;
 	
+	private static Son son_music;
+
 	float floorLevel = 900.0f;
 
 	// camera / where you are 
@@ -18,6 +20,8 @@ public class Scene {
 
 	public Scene(PApplet p) {
 		my_parent = p;
+		
+		son_music = new Son(((GlitchesBattle) my_parent).getMinim(), my_parent, "../ressources/fight.mp3");
 
 		floor_texture = my_parent.loadImage("../ressources/sol.jpg");
 		bordures = my_parent.loadImage("../ressources/bas_sol.png");
@@ -35,6 +39,11 @@ public class Scene {
 				1f, 
 				0f);*/
 		//System.out.println(GlitchesBattle.cam);
+		
+		if (son_music.getMusicMenu().isPlaying() == false){
+			son_music.getMusicMenu().loop(); //rewind() possible
+		}
+		
 		plane(floor_texture);
 	}
 
@@ -98,5 +107,9 @@ public class Scene {
 
 		my_parent.endShape();
 		my_parent.popMatrix();
+	}
+	
+	public void stopMusic() {
+		son_music.stop();
 	}
 }

@@ -22,6 +22,8 @@ public class PlayerView {
 	public PairAnim lastAnim;
 	private static Son son_validation;
 	private boolean meteor = false;
+	private static Son sonHit;
+	private static Son sonBlessure;
 	
 	private final static int METEOR_SIZE = 140;
 
@@ -29,7 +31,8 @@ public class PlayerView {
 		my_model = p;
 
 		son_validation = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/epee.mp3");
-
+		sonHit = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/epee.mp3");
+		sonBlessure = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/coup_ventre.mp3");
 		parent = my_model.getParent();
 		if (my_model.color == Player.BLUE) 
 			pathAnims += "blue/";
@@ -273,12 +276,14 @@ public class PlayerView {
 
 	// not loopable anims
 	public void hurt() {
+		sonBlessure.getMusicMenu().play(0);
 		currentAnim = anims.get("hurt");
 	}
 	public void jump() {
 		currentAnim = anims.get("jump");
 	}
 	public void slash() {
+		sonHit.getMusicMenu().play(0);
 		currentAnim = anims.get("slash"); 
 	}
 	public void slashjump() {
@@ -323,5 +328,10 @@ public class PlayerView {
 		son_validation.getMusicMenu().play(0);
 
 		//	son_validation.getMusicMenu().close();
+	}
+	
+	public void stopMusic() {
+		sonHit.stop();
+		sonBlessure.stop();
 	}
 }

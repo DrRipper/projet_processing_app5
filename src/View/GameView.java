@@ -29,6 +29,8 @@ public class GameView {
 	private int last_time;
 
 	private boolean finish;	
+	
+	private static Son son_countDown;
 
 	public GameView(Game model, PlayerControler p1, PlayerControler p2) {
 		in_pause = false;
@@ -40,6 +42,7 @@ public class GameView {
 		player2 = p2;
 		imgInfini = my_model.getParent().loadImage("../ressources/icon_infini.png");
 		imgBackground = my_model.getParent().loadImage("../ressources/fond1.jpg");
+		son_countDown = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/Countdown.mp3");
 
 		startDecompte = my_model.getParent().millis();
 		decompte = true;
@@ -90,7 +93,12 @@ public class GameView {
 
 
 		// check end
-		return my_model.isGameFinish();
+		if (my_model.isGameFinish()) {
+			my_scene.stopMusic();
+			return true;
+		} else 
+			return false;
+		
 	}
 
 	private void display_end_screen() {
@@ -121,16 +129,20 @@ public class GameView {
 	public void setPauseState(boolean state) {
 		in_pause = state;
 
-		if(!in_pause) {
-			my_model.setStartTime(my_model.getParent().millis());
-			maxTime = last_time;
-		} else {	
-			int elapsed = decompte ? 0:my_model.getParent().millis() - my_model.getStartTime();
-			last_time = maxTime - (elapsed) / 1000;
-		}
+		if (maxTime != null )
+			if(!in_pause) {
+				my_model.setStartTime(my_model.getParent().millis());
+				maxTime = last_time;
+			} else {	
+				int elapsed = decompte ? 0:my_model.getParent().millis() - my_model.getStartTime();
+				last_time = maxTime - (elapsed) / 1000;
+			}
 	}
 
 	public void displayDecompte() {
+		if (!son_countDown.getMusicMenu().isPlaying())
+			son_countDown.getMusicMenu().play(0);
+
 		PFont font = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",200,true);
 		my_model.getParent().textFont(font);
 		//my_model.getParent().textSize(50);
@@ -143,6 +155,7 @@ public class GameView {
 
 		}else {
 			decompte=false;
+			son_countDown.stop();
 			my_model.setStartTime(my_model.getParent().millis());
 		}
 	}

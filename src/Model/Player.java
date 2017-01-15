@@ -103,19 +103,19 @@ public class Player {
 
 	public void setX(float x) {
 		if (x>=0 && x<=my_parent.width-my_width )
-			if (!collision_with_ennemie(true, x, my_y, my_z))
+			if (!collision_with_ennemie(true, x, my_y))
 				my_x = x;
 	}
 
 	public void setY(float y) {
 		if (y>=0 && y<=my_parent.height-my_height)
-			if (!collision_with_ennemie(true, my_x, y, my_z))
+			if (!collision_with_ennemie(true, my_x, y))
 				my_y = y;
 	}
 
 	public void setZ(float z) {
 		if (z>=-1500 && z<=1500)
-			if (!collision_with_ennemie(true, my_x, my_y, z))
+			if (!collision_with_ennemie(true, my_x, my_y))
 				my_z = z;
 	}
 	
@@ -169,11 +169,11 @@ public class Player {
 		return my_mana;
 	}
 
-	public boolean collision_with_ennemie(boolean duringWalking, float x, float y, float z) {
-		return getBounds(duringWalking, x, y, z).intersects(my_ennemie.getBounds(duringWalking, my_ennemie.getX(), my_ennemie.getY(), my_ennemie.getZ()));
+	public boolean collision_with_ennemie(boolean duringWalking, float x, float y) {
+		return getBounds(duringWalking, x, y).intersects(my_ennemie.getBounds(duringWalking, my_ennemie.getX(), my_ennemie.getY()));
 	}
 
-	public Rectangle getBounds(boolean duringWalking, float x, float y, float z) {
+	public Rectangle getBounds(boolean duringWalking, float x, float y) {
 		if (duringWalking)
 			return new Rectangle((int)x, (int)y, my_width, my_height);
 		else // collision durant l'attaque, il faut être face à l'ennemie
@@ -207,9 +207,12 @@ public class Player {
 	}
 
 	public void move(int dx, int dy, int dz) {
-		my_x += dx;
-		my_y += dy;
-		my_z += dz;
+		setX(my_x + dx);
+		setY(my_y + dy);
+		setZ(my_z + dz);
+		//my_x += dx;
+		//my_y += dy;
+		//my_z += dz;
 
 		// tester vitesse ? moving?
 		if ((right && dx<0) || (!right && dx>0))

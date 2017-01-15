@@ -42,7 +42,7 @@ public class GlitchesBattle extends PApplet {
 	public void setup(){
 		/*lights();
 		ambientLight(51, 102, 126);*/
-		frameRate(30);
+		frameRate(30); //30
 		state = WAITING_PLAYER;
 
 		minim = new Minim(this);
