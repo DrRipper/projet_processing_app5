@@ -220,8 +220,7 @@ public class Player {
 	}
 
 	public PlayerView getView() {
-		// TODO Auto-generated method stub
-		return null;
+		return controler.getView();
 	}
 	
 	public void update() {

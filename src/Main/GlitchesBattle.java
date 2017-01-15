@@ -4,16 +4,18 @@ import Controler.MenuControler;
 import Controler.OptionsControler;
 import Controler.PlayerControler;
 import Model.Son;
+import View.WaitScreen;
 import ddf.minim.Minim;
 import processing.core.PApplet;
 
 public class GlitchesBattle extends PApplet {
 	private final static int TITLE_SCREEN = 0;
-	private final static int WAITING_PLAYER = 1;
-	private final static int OPTIONS_SETTINGS = 2;
-	private final static int IN_GAME = 3;
-	private final static int END_SCREEN = 4;
-	private final static int PAUSE = 5;
+	private final static int CHARGEMENT = 1;
+	private final static int WAITING_PLAYER = 2;
+	private final static int OPTIONS_SETTINGS = 3;
+	private final static int IN_GAME = 4;
+	private final static int END_SCREEN = 5;
+	private final static int PAUSE = 6;
 
 	private PlayerControler player1;
 	private PlayerControler player2;
@@ -24,10 +26,11 @@ public class GlitchesBattle extends PApplet {
 
 	private GameControler gameControler;
 
-	private int state;
-
+	private int state = CHARGEMENT;
 	public static int cam=0;
 
+	private WaitScreen waitScreen;
+	
 	public static void main(String[] args) {
 		//PApplet.main(new String[] { "--present", "projet_graphisme.Game"});
 		PApplet.main("Main.GlitchesBattle");
@@ -35,7 +38,6 @@ public class GlitchesBattle extends PApplet {
 
 	public void settings(){
 		size(1000, 900/*, P3D*/);
-		
 		smooth();
 	}
 
@@ -43,36 +45,31 @@ public class GlitchesBattle extends PApplet {
 		/*lights();
 		ambientLight(51, 102, 126);*/
 		frameRate(30); //30
-		state = WAITING_PLAYER;
-
-		minim = new Minim(this);
-
-		initPlayersSettings();		
-		initMenus();
-
 		
+		minim = new Minim(this);	
+		waitScreen = new WaitScreen(this);
 	}
 
 	public void initAll() {
-		state = WAITING_PLAYER;
-
-		initPlayersSettings();	
-		System.out.println("PLAYER INIT OK");
-		initMenus();
-		System.out.println("MENU INIT OK");
+		state = CHARGEMENT;
+		waitScreen.init();
+		
 	}
-
-	public void initMenus() {
-		menuControler = new MenuControler(this, player1, player2);
-		optionsControler = new OptionsControler(this);
+	
+	public void setPlayer1(PlayerControler p) {
+		player1 = p;
 	}
-
-	private void initPlayersSettings() {
-		player1 = new PlayerControler(this, 1);
-		player2 = new PlayerControler(this, 3); 
-
-		player1.setEnnemie(player2);
-		player2.setEnnemie(player1);
+	
+	public void setPlayer2(PlayerControler p) {
+		player2 = p;
+	}
+	
+	public void setMenuControler(MenuControler m) {
+		menuControler = m;
+	}
+	
+	public void setOptionsControler(OptionsControler o) {
+		optionsControler = o;
 	}
 
 	public void initGame(Integer time) {
@@ -81,6 +78,12 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	public void draw(){
+		if (state == CHARGEMENT) {
+			if (!waitScreen.nextStep())
+				state = WAITING_PLAYER;
+			waitScreen.display();
+			
+		}
 		if (state == WAITING_PLAYER) { // on attend d'avoir les deux joueurs 
 			if (!menuControler.display()) {
 				state = OPTIONS_SETTINGS;
@@ -94,13 +97,13 @@ public class GlitchesBattle extends PApplet {
 				state = END_SCREEN;
 				gameControler.isGameFinish(true);
 			}
+			player1.update();
+			player2.update();
 		} else if (state == END_SCREEN) {
 			gameControler.display();
 		} else if (state == PAUSE) {
 			gameControler.display();
 		}
-		player1.update();
-		player2.update();
 	}
 
 	public void keyPressed() {
