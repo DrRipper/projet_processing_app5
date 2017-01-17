@@ -23,7 +23,7 @@ public class Scene {
 		bordures = my_parent.loadImage("../ressources/bas_sol.png");
 	}
 
-	public void display(int joueurEnAvance) {
+	public void display() {
 		/*my_parent.camera(
 				my_parent.width/2.0f, 
 				my_parent.height/3f, 

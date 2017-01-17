@@ -3,16 +3,19 @@ import Controler.GameControler;
 import Controler.MenuControler;
 import Controler.OptionsControler;
 import Controler.PlayerControler;
+import Controler.WiimoteController;
 import Model.Son;
 import ddf.minim.Minim;
 import processing.core.PApplet;
+import wiiusej.WiiUseApiManager;
+import wiiusej.Wiimote;
 
 public class GlitchesBattle extends PApplet {
-	private final static int TITLE_SCREEN = 0;
-	private final static int WAITING_PLAYER = 1;
-	private final static int OPTIONS_SETTINGS = 2;
-	private final static int IN_GAME = 3;
-	private final static int END_SCREEN = 4;
+	public final static int TITLE_SCREEN = 0;
+	public final static int WAITING_PLAYER = 1;
+	public final static int OPTIONS_SETTINGS = 2;
+	public final static int IN_GAME = 3;
+	public final static int END_SCREEN = 4;
 
 	private PlayerControler player1;
 	private PlayerControler player2;
@@ -27,6 +30,12 @@ public class GlitchesBattle extends PApplet {
 
 	public static int cam=0;
 
+	private static Wiimote[] wiimotes;
+
+	private double angle_joystic; 
+	private double magnitude_joystick;
+	private boolean animationHitIsFinished;
+	
 	public static void main(String[] args) {
 		//PApplet.main(new String[] { "--present", "projet_graphisme.Game"});
 		PApplet.main("Main.GlitchesBattle");
@@ -34,7 +43,7 @@ public class GlitchesBattle extends PApplet {
 
 	public void settings(){
 		size(1000, 900/*, P3D*/);
-		
+
 		smooth();
 	}
 
@@ -44,12 +53,19 @@ public class GlitchesBattle extends PApplet {
 		frameRate(30);
 		state = WAITING_PLAYER;
 
+		wiimotes = WiiUseApiManager.getWiimotes(1, true);
+		Wiimote wiimote = wiimotes[0];
+		//wiimote.setTimeout(Short.MIN_VALUE, Short.MIN_VALUE);
+		//wiimote.activateIRTRacking();
+		wiimote.activateMotionSensing();
+		wiimote.addWiiMoteEventListeners(new WiimoteController(this));
+		animationHitIsFinished=true;
 		minim = new Minim(this);
 
 		initPlayersSettings();		
 		initMenus();
 
-		
+
 	}
 
 	public void initAll() {
@@ -87,6 +103,7 @@ public class GlitchesBattle extends PApplet {
 			optionsControler.display();	
 		} else if(state == IN_GAME){ // début du combat
 			gameControler.display();
+			mouvement();
 			if (gameControler.getModel().isGameFinish())
 				state = END_SCREEN;
 		} else if (state == END_SCREEN) {
@@ -94,6 +111,81 @@ public class GlitchesBattle extends PApplet {
 		}
 		player1.update();
 		player2.update();
+	}
+
+	public void isButtonAPressed(int id){
+		if (state == WAITING_PLAYER) { // etat menu
+			if (id==1)
+				player1.set_validity(true);
+			else
+				player2.set_validity(true);
+		}else if (state == OPTIONS_SETTINGS) {
+			if (optionsControler.isOptionsValid()) {
+				optionsControler.stop();
+				Integer time = optionsControler.getMaxTime();
+				initGame(time);
+				gameControler.setStartTime(millis());
+				state = IN_GAME;
+			}
+		} else if (state == IN_GAME && !gameControler.isDecompting()) {
+			if (id==1)
+				player1.magicalHit();
+		}
+	}
+	
+	public GameControler getGameControler() {
+		return gameControler;
+	}
+
+	public void isButtonUpPressed() {
+		if (state == OPTIONS_SETTINGS){
+			if (!optionsControler.isWaiting()) // on selectionne les options et leur valeurs
+				optionsControler.setIdxOption(optionsControler.getOptionIdx()-1);
+			else
+				optionsControler.setIdxTimeValue(+1);
+
+		}
+	}
+
+	public void isButtonDownPressed() {
+		if (state == OPTIONS_SETTINGS){
+			if (!optionsControler.isWaiting()) // on selectionne les options et leur valeurs
+				optionsControler.setIdxOption(optionsControler.getOptionIdx()+1);
+			else
+				optionsControler.setIdxTimeValue(-1);
+
+		}
+	}
+
+	public void isButtonLeftPressed() {
+		if (state == OPTIONS_SETTINGS){
+			if (!optionsControler.isWaiting()) // on selectionne les options et leur valeurs
+				optionsControler.setIdxOptionValue(optionsControler.getOptionValueIdx()[optionsControler.getOptionIdx()]-1);
+			else
+				optionsControler.setIdxTime(optionsControler.getTimeIdx()-1);
+
+		}
+	}
+
+	public void isButtonRightPressed() {
+		if (state == OPTIONS_SETTINGS){
+			if (!optionsControler.isWaiting()) // on selectionne les options et leur valeurs
+				optionsControler.setIdxOptionValue(optionsControler.getOptionValueIdx()[optionsControler.getOptionIdx()]+1);
+			else
+				optionsControler.setIdxTime(optionsControler.getTimeIdx()+1);
+
+		}
+	}
+
+	public void mouvement(){
+		if (!gameControler.isDecompting()) {
+			if (angle_joystic<110 && angle_joystic>70 && magnitude_joystick > 0.2)
+				player1.move(7, 0, 0);
+			else if (angle_joystic<290 && angle_joystic>250 && magnitude_joystick > 0.2)
+				player1.move(-7, 0, 0);
+			else
+				player1.idle();
+		}
 	}
 
 	public void keyPressed() {
@@ -169,7 +261,7 @@ public class GlitchesBattle extends PApplet {
 				cam ++;
 		}
 	}
-	
+
 	public void keyReleased() {
 		if (state != WAITING_PLAYER) {
 			int increment = 10;
@@ -201,11 +293,45 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	public void stop() {
-		
+
 		super.stop();
 	}
 
 	public Minim getMinim() {
 		return minim;
 	}
+
+	public int getState() {
+		return state;
+	}
+	
+	public void setAngle(double d) {
+		angle_joystic = d;
+	}
+	
+	public void setMagnitude(double d) {
+		magnitude_joystick = d;
+	}
+	
+	public void hit() {
+		System.out.println("2");
+		player1.hit();
+	}
+
+	public void setAnimationHitState(int player, boolean b) {
+		animationHitIsFinished=b;	
+		if(wiimotes.length>player)
+			((WiimoteController)wiimotes[player].getWiiMoteEventListeners()[0]).setAnimationHitState(b);
+	}
+	
+	public boolean getAnimationHitState() {
+		return animationHitIsFinished;
+	}
+
+	/*public void isButtonReleased() {
+		if (state != WAITING_PLAYER) {
+			player1.idle();
+		}
+
+	}*/
 }

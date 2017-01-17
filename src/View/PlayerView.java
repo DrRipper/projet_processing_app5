@@ -122,11 +122,18 @@ public class PlayerView {
 		int y = my_model.getY();
 		int z = my_model.getZ();
 		boolean lastFrame = sens(currentAnim).display(x-deltaX,y-deltaY,z);
+		//System.out.println(lastFrame + " ---- " + currentAnim.equals(anims.get("slash")));
+		/*if(!lastFrame && currentAnim.equals(anims.get("slash"))) {
+			((GlitchesBattle)my_model.getParent()).setAnimationHitState(my_model.getIdx(), false);
+		} else if (lastFrame){
+			((GlitchesBattle)my_model.getParent()).setAnimationHitState(my_model.getIdx(), true);
+		}*/
+
 		if (!sens(currentAnim).loopable)
 			if (lastFrame) {
 				currentAnim = lastAnim;
 				my_model.hurting = false;
-			}
+			} 
 	}
 
 	void draw_head_wait() {
@@ -264,6 +271,7 @@ public class PlayerView {
 		currentAnim = anims.get("jump");
 	}
 	public void slash() {
+		System.out.println("4");
 		currentAnim = anims.get("slash"); 
 	}
 	public void slashjump() {
@@ -292,7 +300,7 @@ public class PlayerView {
 	}
 
 	public void play_validation() {
-		
+
 		son_validation.getMusicMenu().play(0);
 
 		//	son_validation.getMusicMenu().close();

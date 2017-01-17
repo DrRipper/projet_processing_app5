@@ -1,6 +1,6 @@
 package View;
 
-import com.jogamp.common.util.IntIntHashMap;
+//import com.jogamp.common.util.IntIntHashMap;
 
 import Controler.PlayerControler;
 import Main.GlitchesBattle;
@@ -46,7 +46,7 @@ public class MenuView {
 		//son = new Son(my_model.getParent(), "../ressources/music.mp3");
 		//font = my_model.getParent().createFont("Georgia",40,true);
 
-imgTitle = my_model.getParent().loadImage("../ressources/title_test.png");
+		imgTitle = my_model.getParent().loadImage("../ressources/title_test.png");
 
 		name_player1 = my_model.getParent().loadImage("../ressources/name_player1.png");
 		name_player2 = my_model.getParent().loadImage("../ressources/name_player2.png");
