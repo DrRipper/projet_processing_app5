@@ -10,12 +10,11 @@ public class PlayerControler {
 	private Player my_model;
 	private PlayerView my_view;
 	private static Son son_damaged;
-
-	public PlayerControler(PApplet p, int idx, String img) {
-		my_model = new Player(p, idx, img, this);
+	
+	public PlayerControler(PApplet p, int idx) {
+		my_model = new Player(p, idx, this);
 		my_view = new PlayerView(my_model);
-
-		son_damaged = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/hurt.wav");
+		son_damaged = new Son(((GlitchesBattle) p).getMinim(), p, "../ressources/hurt.wav");
 	}
 
 	public void setEnnemie(PlayerControler p) {
@@ -36,7 +35,6 @@ public class PlayerControler {
 
 	public void set_validity(boolean state) {
 		if (state != my_model.get_validity()) {
-			//System.out.println("HERE !!!");
 			my_view.play_validation();
 			my_view.jump();
 		}
@@ -57,47 +55,34 @@ public class PlayerControler {
 	}
 
 	public boolean hit() {
-		System.out.println("3");
 		my_model.hurting = true;
 
 		son_damaged.getMusicMenu().play();
 		my_view.slash();
-		if( my_model.hurtbox.collision( my_model.getEnnemie().hitbox ) ) { // && !my_view.currentAnim.equals( my_view.anims.get( "slash" ) ) 
-			my_model.getEnnemie().controler.getView().hurt();
-			if (my_model.get_mana()+5<Player.MAX_MANA)
-				my_model.set_mana(my_model.get_mana()+5);
-			else 
-				my_model.set_mana(Player.MAX_MANA);
+		
+		if(my_model.getZ()==my_model.getEnnemie().getZ() && my_model.hurtbox.collision(my_model.getEnnemie().hitbox)) {
+	    	  my_model.getEnnemie().controler.getView().hurt();
+	 
+	    	  if (my_model.get_mana()+5<Player.MAX_MANA)
+					my_model.set_mana(my_model.get_mana()+5);
+				else 
+					my_model.set_mana(Player.MAX_MANA);
 
-			my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-5);
-			my_model.getParent().draw();
-			return true;
-		}
-
-		return false;
-
-
-		/*if (my_model.collision_with_ennemie(false, 0, 0)) {
-			if (my_model.get_mana()+5<Player.MAX_MANA)
-				my_model.set_mana(my_model.get_mana()+5);
-			else 
-				my_model.set_mana(Player.MAX_MANA);
-
-			my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-5);
-			my_model.getParent().draw();
-			return true;
-		}
-		return false;*/
-
+				my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-3);
+				//my_model.getParent().draw();
+				return true;
+	    }
+		return false;		
 	}
 
 	public void magicalHit() {
 		if(my_model.get_mana() == Player.MAX_MANA) {
-			my_model.getMeteorite().hit();
+			//my_model.getMeteorite().hit();
+			my_view.meteor();
 			my_model.set_mana(0);
-			my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-30);
+			my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-20);
 		}
-		my_model.getParent().draw();
+		//my_model.getParent().draw();
 	}
 
 	public void move(int dx, int dy, int dz) {

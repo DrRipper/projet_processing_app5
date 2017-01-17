@@ -58,8 +58,7 @@ public class WiimoteController implements WiimoteListener{
 		int z = arg0.getRawAcceleration().getZ();
 		
 		//System.out.println(animationHitFinished);
-		if(my_parent.getState()==GlitchesBattle.IN_GAME  && !my_parent.getGameControler().isDecompting() && (90<x && x<100 || 90<y && y<100 || 90<z && z<100) ){
-			System.out.println("1");
+		if(my_parent.getGameControler()!=null && !my_parent.getGameControler().isDecompting() && (90<x && x<100 || 90<y && y<100 || 90<z && z<100) ){
 			my_parent.hit();
 			/*System.out.println("X "+arg0.getRawAcceleration().getX()); 
 			System.out.println("Y "+arg0.getRawAcceleration().getY()); 

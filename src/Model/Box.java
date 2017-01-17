@@ -6,7 +6,7 @@ class Box {
 
 	public int x, y, dx, dy, w, h;
 	public boolean displaying = false;
-	public short r=0, v=0, b=0, a=100;
+	public short r=0, v=0, b=0, a=100; 
 	private PApplet parent;
 
 	public Box(PApplet p) {
@@ -16,11 +16,11 @@ class Box {
 	public void update(int x, int y) {
 		this.x = x;
 		this.y = y;
-		if (displaying) {
+		/*if (displaying) {
 			parent.noStroke();
-			parent.fill(r,v,b,a);
+			parent.fill(r,v,b);
 			parent.rect(x-dx,y-dy,w,h);
-		}
+		}*/
 	}
 
 	public boolean collision(Box b) {

@@ -5,17 +5,23 @@ import Controler.OptionsControler;
 import Controler.PlayerControler;
 import Controler.WiimoteController;
 import Model.Son;
+import View.WaitScreen;
 import ddf.minim.Minim;
 import processing.core.PApplet;
 import wiiusej.WiiUseApiManager;
 import wiiusej.Wiimote;
 
 public class GlitchesBattle extends PApplet {
-	public final static int TITLE_SCREEN = 0;
-	public final static int WAITING_PLAYER = 1;
-	public final static int OPTIONS_SETTINGS = 2;
-	public final static int IN_GAME = 3;
-	public final static int END_SCREEN = 4;
+
+	private final static int TITLE_SCREEN = 0;
+	private final static int CHARGEMENT = 1;
+	private final static int WAITING_PLAYER = 2;
+	private final static int OPTIONS_SETTINGS = 3;
+	private final static int IN_GAME = 4;
+	private final static int END_SCREEN = 5;
+	private final static int PAUSE = 6;
+
+	private final static int INCREMENT = 10;
 
 	private PlayerControler player1;
 	private PlayerControler player2;
@@ -26,9 +32,12 @@ public class GlitchesBattle extends PApplet {
 
 	private GameControler gameControler;
 
-	private int state;
+	private int state = CHARGEMENT;
+	//public 	PeasyCam cam;
 
-	public static int cam=0;
+	private boolean allAnimationFinished;
+	
+	private WaitScreen waitScreen;
 
 	private static Wiimote[] wiimotes;
 
@@ -42,7 +51,7 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	public void settings(){
-		size(1000, 900/*, P3D*/);
+		size(1000, 900, P3D);
 
 		smooth();
 	}
@@ -51,7 +60,7 @@ public class GlitchesBattle extends PApplet {
 		/*lights();
 		ambientLight(51, 102, 126);*/
 		frameRate(30);
-		state = WAITING_PLAYER;
+		state = CHARGEMENT;
 
 		wiimotes = WiiUseApiManager.getWiimotes(1, true);
 		Wiimote wiimote = wiimotes[0];
@@ -59,33 +68,42 @@ public class GlitchesBattle extends PApplet {
 		//wiimote.activateIRTRacking();
 		wiimote.activateMotionSensing();
 		wiimote.addWiiMoteEventListeners(new WiimoteController(this));
-		animationHitIsFinished=true;
+		
 		minim = new Minim(this);
-
-		initPlayersSettings();		
-		initMenus();
-
-
+		waitScreen = new WaitScreen(this);
+		allAnimationFinished = true;
 	}
+
+	public void lights() { 
+		noLights();
+		int w=170, m=-422, p=+422; 
+		ambientLight(w,w,w); 
+		directionalLight(w, w, w, m, m, m); 
+		directionalLight(w, w, w, p, p, p); 
+		directionalLight(w, w, w, m, m, p); 
+		directionalLight(w, w, w, p, p, m); 
+	} 
 
 	public void initAll() {
-		state = WAITING_PLAYER;
+		state = CHARGEMENT;
+		waitScreen.init();
 
-		initPlayersSettings();		
-		initMenus();
 	}
 
-	public void initMenus() {
-		menuControler = new MenuControler(this, player1, player2);
-		optionsControler = new OptionsControler(this);
+	public void setPlayer1(PlayerControler p) {
+		player1 = p;
 	}
 
-	private void initPlayersSettings() {
-		player1 = new PlayerControler(this, 1, "../ressources/p1.png" );
-		player2 = new PlayerControler(this, 3, "../ressources/p2.png"); 
+	public void setPlayer2(PlayerControler p) {
+		player2 = p;
+	}
 
-		player1.setEnnemie(player2);
-		player2.setEnnemie(player1);
+	public void setMenuControler(MenuControler m) {
+		menuControler = m;
+	}
+
+	public void setOptionsControler(OptionsControler o) {
+		optionsControler = o;
 	}
 
 	public void initGame(Integer time) {
@@ -94,6 +112,13 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	public void draw(){
+		clear();
+		if (state == CHARGEMENT) {
+			if (!waitScreen.nextStep())
+				state = WAITING_PLAYER;
+			waitScreen.display();
+
+		}
 		if (state == WAITING_PLAYER) { // on attend d'avoir les deux joueurs 
 			if (!menuControler.display()) {
 				state = OPTIONS_SETTINGS;
@@ -104,13 +129,19 @@ public class GlitchesBattle extends PApplet {
 		} else if(state == IN_GAME){ // début du combat
 			gameControler.display();
 			mouvement();
-			if (gameControler.getModel().isGameFinish())
+			if (gameControler.getModel().isGameFinish()) {
 				state = END_SCREEN;
+				gameControler.isGameFinish(true);
+			}
+			player1.update();
+			player2.update();
 		} else if (state == END_SCREEN) {
-			initAll();
+			lights();
+			gameControler.display();
+		} else if (state == PAUSE) {
+			lights();
+			gameControler.display();
 		}
-		player1.update();
-		player2.update();
 	}
 
 	public void isButtonAPressed(int id){
@@ -226,18 +257,19 @@ public class GlitchesBattle extends PApplet {
 				}
 			}
 		} else if (state == IN_GAME && !gameControler.isDecompting()) {
-			int increment = 10;
+			
+			if(!allAnimationFinished)
+				return;
 			// PLAYER 1
 			if (key  == 'z' || key == 'Z') {
 				//player1.setZ(player1.getModel().getZ()-100);
-				player1.move(0, 0, -increment);
+				player1.move(0, 0, -INCREMENT);
 			} else if (key  == 'q' || key == 'Q') {
-				player1.move(-increment, 0, 0);
+				player1.move(-INCREMENT, 0, 0);
 			} else if (key  == 'd' || key == 'D') {
-				player1.move(increment, 0, 0);
+				player1.move(INCREMENT, 0, 0);
 			} else if (key  == 's' || key == 'S') {
-				//player1.setZ(player1.getModel().getZ()+100);
-				player1.move(0, 0, increment);
+				player1.move(0, 0, INCREMENT);
 			} else if (key == 'a' || key == 'A') {
 				player1.hit();
 			}  else if (key == 'e' || key == 'E') {
@@ -245,20 +277,30 @@ public class GlitchesBattle extends PApplet {
 			} // PLAYER 2
 			else if (key  == 'i' || key == 'I') {
 				//player2.setZ(player2.getModel().getZ()-100);
-				player2.move(0, 0, -increment);
+				player2.move(0, 0, -INCREMENT);
 			} else if (key  == 'j' || key == 'J') {
-				player2.move(-increment, 0, 0);
+				player2.move(-INCREMENT, 0, 0);
 			} else if (key  == 'l' || key == 'L') {
-				player2.move(increment, 0, 0);
+				player2.move(INCREMENT, 0, 0);
 			} else if (key  == 'k' || key == 'K') {
-				player2.setZ(player2.getModel().getZ()+100);
-				player2.move(0, 0, increment);
+				player2.move(0, 0, INCREMENT);
 			} else if (key == 'u' || key == 'U') {
 				player2.hit();
 			}  else if (key == 'o' || key == 'O') {
 				player2.magicalHit();
-			}else if (key == 'm')
-				cam ++;
+			}else if (key == 'p' || key == 'P') {
+				state = PAUSE;
+				gameControler.setPauseState(true);
+			}
+		} else if (state == PAUSE) {
+			if (key  == 'a' || key == 'A') {
+				state = IN_GAME;
+				gameControler.setPauseState(false);
+			}
+		} else if (state == END_SCREEN) {
+			if (key == 'a' || key == 'A') {
+				initAll();
+			}
 		}
 	}
 
@@ -288,10 +330,6 @@ public class GlitchesBattle extends PApplet {
 		}
 	}
 
-	public int getC() {
-		return cam;
-	}
-
 	public void stop() {
 
 		super.stop();
@@ -314,7 +352,6 @@ public class GlitchesBattle extends PApplet {
 	}
 	
 	public void hit() {
-		System.out.println("2");
 		player1.hit();
 	}
 

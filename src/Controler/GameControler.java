@@ -9,14 +9,17 @@ import processing.core.PApplet;
 public class GameControler {
 	private Game my_model;
 	private GameView my_view;
+	private ManaUpdater manaUpdater;
 	
 	public GameControler(PApplet p, PlayerControler p1, PlayerControler p2) {
 		my_model = new Game(p, p1, p2);
 		my_view = new GameView(my_model, p1, p2);
 		
+		my_model.setStartTime(p.millis());
+		
 		// UPDATE DE LA MANA :
 		Timer timer = new Timer();
-		timer.schedule(new ManaUpdater(this, p1, p2), 0, 1000);
+		timer.schedule(manaUpdater = new ManaUpdater(this, p1, p2), 0, 1000);
 	}
 	
 	public Game getModel() {
@@ -41,5 +44,15 @@ public class GameControler {
 
 	public boolean isDecompting() {
 		return my_view.isDecompting();
+	}
+
+	public void setPauseState(boolean state) {
+		my_view.setPauseState(state);
+		manaUpdater.setPauseState(state);
+	}
+	
+	public void isGameFinish(boolean state) {
+		my_view.isGameFinish(state);
+		manaUpdater.setPauseState(state);
 	}
 }

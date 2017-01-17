@@ -7,18 +7,18 @@ public class HitBox extends Box {
 	public HitBox(PApplet p, boolean right) {
 		super(p);
 		setSens(right);
-		w = 90;
-		h = 180;
-		b = 255;
+		w = (int) (90*0.48f);
+		h = (int) (180*0.48f);
+		b = (short) (255*0.48f);
 	}
 	public void setSens(boolean right) {
 		if (right) {
-			dx = 35;
-			dy = 145;
+			dx = (int) (35*0.48f);
+			dy = (int) (145*0.48f);
 		}
 		else {
-			dx = 55;
-			dy = 145;
+			dx = (int) (55*0.48f);
+			dy = (int) (145*0.48f);
 		}
 	}
 }
