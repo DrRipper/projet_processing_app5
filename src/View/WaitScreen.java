@@ -35,11 +35,12 @@ public class WaitScreen {
 
 	public void display() {
 		my_parent.background(255);
+		my_parent.fill(255, 140, 102);
+
 		my_parent.image(logo, my_parent.width/2 - logo.width, my_parent.height/2 - logo.height, logo.width*2, logo.height*2);
 
 		my_parent.text("Please wait...", my_parent.width/2 - 50, logo.height + my_parent.height/2);
 		my_parent.noStroke();
-		my_parent.fill(255, 140, 102);
 		my_parent.rect( my_parent.width/2 - logo.width*1.5f, logo.height*1.5f + my_parent.height/2, logo.width*3, 10);
 		my_parent.fill(255, 51, 51);
 		my_parent.rect( my_parent.width/2 - logo.width*1.5f, logo.height*1.5f + my_parent.height/2, avancement, 10);

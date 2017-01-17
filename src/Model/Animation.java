@@ -10,6 +10,7 @@ public class Animation {
 	public boolean loopable;
 	String name;
 	PApplet parent;
+	private boolean meteor;
 
 	public Animation(PApplet p, String imagePrefix, int count, boolean loop, String n) {
 		parent = p;
@@ -18,6 +19,7 @@ public class Animation {
 		loopable = loop;
 		name = n;
 
+		meteor = n.equals("meteor");
 		for (int i = 0; i < imageCount; i++) {
 			// Use nf() to number format 'i' into four digits
 			String filename = imagePrefix + PApplet.nf(i+1, 4) + ".png";
@@ -30,7 +32,8 @@ public class Animation {
 		frame = (frame+1) % imageCount;
 		parent.pushMatrix();
 		parent.translate(0,0, zpos);
-		parent.image(images[frame], xpos, ypos);
+		parent.noFill();
+		parent.image(images[frame], xpos, ypos, 250, 250);
 		parent.popMatrix();
 		return (frame == imageCount-1);
 	}

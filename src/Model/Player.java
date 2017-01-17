@@ -57,9 +57,14 @@ public class Player {
 		my_mana = 0;
 		controler = control;
 
-		my_y_initial = my_parent.height-45;//((float)my_parent.height)*0.75f;
-		my_x_initial = ((float)my_parent.width)*0.25f*my_idx;
-		my_z_initial = 0;
+		my_y_initial = 800;//((float)my_parent.height)*0.75f; -45
+		
+		if(my_idx==1)
+			my_x_initial = 580;
+		else
+			my_x_initial = 780;
+
+		my_z_initial = 220;
 				
 		my_x = my_x_initial;
 		my_y = my_y_initial;
@@ -114,7 +119,7 @@ public class Player {
 	}
 
 	public void setZ(float z) {
-		if (z>=-1500 && z<=1500)
+		if (z>=-40 && z<=460)
 			if (!collision_with_ennemie(true, my_x, my_y))
 				my_z = z;
 	}
@@ -170,6 +175,8 @@ public class Player {
 	}
 
 	public boolean collision_with_ennemie(boolean duringWalking, float x, float y) {
+		if (my_z != my_ennemie.getZ())
+			return false;
 		return getBounds(duringWalking, x, y).intersects(my_ennemie.getBounds(duringWalking, my_ennemie.getX(), my_ennemie.getY()));
 	}
 

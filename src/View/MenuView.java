@@ -55,11 +55,11 @@ imgTitle = my_model.getParent().loadImage("../ressources/title_test.png");
 		initialX1 = player1.getModel().getX();
 		initialX2 = player2.getModel().getX();
 
-		player1.setX(player1.getModel().getX()+40);
-		player1.setY(600);
+		player1.setX(450);
+		player1.setY(my_model.getParent().height);
 		
-		player2.setX(player2.getModel().getX()-40);
-		player2.setY(600);
+		player2.setX(player2.getModel().getX()+40);
+		player2.setY(my_model.getParent().height);
 
 
 	}

@@ -9,7 +9,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 import Model.Son;
 
-public class GameView {
+public class GameView {	
 	Integer maxTime = null; //new Integer(90); // Exemple : 90 secondes de jeux (null si pas de timer)
 	private PImage imgInfini;
 	private PImage imgBackground;
@@ -49,30 +49,11 @@ public class GameView {
 	}
 
 	public boolean display() {
-		int joueurEnAvacne = 100;
-		if (player1.getModel().get_pv()>player2.getModel().get_pv()+10)
-			joueurEnAvacne = 0;
-		else if (player2.getModel().get_pv()>player1.getModel().get_pv()+10)
-			joueurEnAvacne = 200;
+		my_model.getParent().background(0, 255, 255);
 
-		my_model.getParent().background(0, 0, 0);
-
-		/*if (son.getMusicMenu().isPlaying() == false){
-			son.getMusicMenu().play(); //rewind() possible
-		}
-
-		my_model.getParent().background(0, 0, 0);*/
-
-		//my_scene.display();
-		//my_model.getParent().image(imgBackground, 0, 0, my_model.getParent().width, my_model.getParent().height);
-
-
-		my_scene.display(joueurEnAvacne);
-
-		if (in_pause)
-			display_pause_screen();
-		if (finish)
-			display_end_screen();
+		my_model.getParent().lights();
+		my_scene.display();
+		my_model.getParent().noLights(); // pas de lumière sur les éléments 2D
 
 		// on affiche les barres de PV et de mana
 		player1.getView().display_pv();
@@ -85,41 +66,45 @@ public class GameView {
 		time(); 
 
 		// placement des deux personnages
-		player1.getView().displayPlayer();
-		player2.getView().displayPlayer();
-
+		boolean animation1Finished = player1.getView().displayPlayer();
+		boolean animation2Finished = player2.getView().displayPlayer();
+		
+		my_model.getParent().hint(my_model.getParent().DISABLE_DEPTH_TEST);
+		my_model.getParent().textMode(my_model.getParent().MODEL);
+		my_model.getParent().fill(0, 153, 255);
+		if (in_pause)
+			display_pause_screen();
+		if (finish)
+			display_end_screen();
 		if (decompte)
 			displayDecompte();
+		my_model.getParent().hint(my_model.getParent().ENABLE_DEPTH_TEST);
 
-
-		// check end
-		if (my_model.isGameFinish()) {
-			my_scene.stopMusic();
-			return true;
-		} else 
-			return false;
 		
+		return (animation1Finished && animation2Finished);	
 	}
 
-	private void display_end_screen() {
+	private void display_end_screen() {		
+		
 		int id = my_model.getWinner();
-		PFont font = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",200,true);
+		PFont font = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",100,true);
 		my_model.getParent().textFont(font);
 		if (id == 0)
-			my_model.getParent().text("Equality !", (my_model.getParent().width/2), (my_model.getParent().height/2)-100);
+			my_model.getParent().text("Equality !", (my_model.getParent().width/2), (my_model.getParent().height/2)-100, 100);
 		else
-			my_model.getParent().text("Player "+ id + "\nWins !", (my_model.getParent().width/2), (my_model.getParent().height/2)-100);
+			my_model.getParent().text("Player "+ id + "\nWins !", (my_model.getParent().width/2), (my_model.getParent().height/2)-100, 100);
 		my_model.getParent().textSize(50);
 		my_model.getParent().text("Press A to continue", (my_model.getParent().width/2), (my_model.getParent().height/2)+300);
+
 	}
 
-	private void display_pause_screen() {
-		PFont font = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",200,true);
+	private void display_pause_screen() {	
+
+		PFont font = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",100,true);
 		my_model.getParent().textFont(font);
-		my_model.getParent().text("PAUSE", (my_model.getParent().width/2), (my_model.getParent().height/2));
+		my_model.getParent().text("PAUSE", (my_model.getParent().width/2), (my_model.getParent().height/2), 100);
 		my_model.getParent().textSize(50);
 		my_model.getParent().text("Press A to continue", (my_model.getParent().width/2), (my_model.getParent().height/2)+250);
-
 	}
 
 	public void stopMusic() {
@@ -140,6 +125,7 @@ public class GameView {
 	}
 
 	public void displayDecompte() {
+	
 		if (!son_countDown.getMusicMenu().isPlaying())
 			son_countDown.getMusicMenu().play(0);
 
@@ -162,9 +148,8 @@ public class GameView {
 
 	public void time() {
 		my_model.getParent().textSize(50);
-		my_model.getParent().fill(0); 
 		my_model.getParent().textAlign(PApplet.CENTER);
-		my_model.getParent().fill(255);
+		my_model.getParent().fill(0, 51, 153);
 		my_model.getParent().stroke(0);
 
 		if ( maxTime != null) {

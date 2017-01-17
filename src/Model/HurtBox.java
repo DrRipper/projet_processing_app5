@@ -7,19 +7,19 @@ public class HurtBox extends Box {
 	public HurtBox(PApplet p, boolean right) {
 		super(p);
 		setSens(right);
-		w = 190;
-		h = 180;
-		r = 255;
+		w = (int) (190*0.48f);
+		h = (int) (180*0.48f);
+		r = (short) (255*0.48f);
 	}
 
 	public void setSens(boolean right) {
 		if (right) {
-			dx = 35-90;
-			dy = 145;
+			dx = (int) ((35-90)*0.48f);
+			dy = (int) (145*0.48f);
 		}
 		else {
-			dx = 55+190;
-			dy = 145;
+			dx = (int) ((55+190)*0.48f);
+			dy = (int) (145*0.48f);
 		}
 	}
 }

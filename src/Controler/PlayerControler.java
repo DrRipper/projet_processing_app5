@@ -58,15 +58,17 @@ public class PlayerControler {
 		my_model.hurting = true;
 		son_damaged.getMusicMenu().play();
 		my_view.slash();
-		if(my_model.hurtbox.collision(my_model.getEnnemie().hitbox)) {
+		
+		if(my_model.getZ()==my_model.getEnnemie().getZ() && my_model.hurtbox.collision(my_model.getEnnemie().hitbox)) {
 	    	  my_model.getEnnemie().controler.getView().hurt();
+	 
 	    	  if (my_model.get_mana()+5<Player.MAX_MANA)
 					my_model.set_mana(my_model.get_mana()+5);
 				else 
 					my_model.set_mana(Player.MAX_MANA);
 
 				my_model.getEnnemie().set_pv(my_model.getEnnemie().get_pv()-3);
-				my_model.getParent().draw();
+				//my_model.getParent().draw();
 				return true;
 	    }
 		return false;		

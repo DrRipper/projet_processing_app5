@@ -17,7 +17,11 @@ public class Son {
 		music = minim.loadFile(title); // ajouter de la music au jeu
 		//music.mute();
 
-		in = minim.getLineIn(); // get voice
+		
+	}
+	
+	public Son(Minim m) {
+		minim = m;
 	}
 
 	public AudioPlayer getMusicMenu() {
@@ -26,7 +30,7 @@ public class Son {
 	}
 
 	public AudioInput getVoice() {
-		return in;
+		return minim.getLineIn(Minim.STEREO, 512);
 	}
 
 	public void stop() {

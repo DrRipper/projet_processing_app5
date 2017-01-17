@@ -3,9 +3,9 @@ import Controler.GameControler;
 import Controler.MenuControler;
 import Controler.OptionsControler;
 import Controler.PlayerControler;
-import Model.Son;
 import View.WaitScreen;
 import ddf.minim.Minim;
+import peasy.PeasyCam;
 import processing.core.PApplet;
 
 public class GlitchesBattle extends PApplet {
@@ -17,6 +17,7 @@ public class GlitchesBattle extends PApplet {
 	private final static int END_SCREEN = 5;
 	private final static int PAUSE = 6;
 
+	private final static int INCREMENT = 10;
 	private PlayerControler player1;
 	private PlayerControler player2;
 	private Minim minim;
@@ -27,47 +28,64 @@ public class GlitchesBattle extends PApplet {
 	private GameControler gameControler;
 
 	private int state = CHARGEMENT;
-	public static int cam=0;
+	public 	PeasyCam cam;
 
-	private WaitScreen waitScreen;
+	private boolean allAnimationFinished;
 	
+	private WaitScreen waitScreen;
+
 	public static void main(String[] args) {
 		//PApplet.main(new String[] { "--present", "projet_graphisme.Game"});
 		PApplet.main("Main.GlitchesBattle");
 	}
 
 	public void settings(){
-		size(1000, 900/*, P3D*/);
+		size(1000, 900, P3D);
 		smooth();
 	}
 
 	public void setup(){
 		/*lights();
 		ambientLight(51, 102, 126);*/
+		/*cam = new PeasyCam(this, 100);
+		cam.setMinimumDistance(0);
+		cam.setMaximumDistance(1500);*/
+
 		frameRate(30); //30
-		
+
 		minim = new Minim(this);	
 		waitScreen = new WaitScreen(this);
+		allAnimationFinished = true;
 	}
+
+	public void lights() { 
+		noLights();
+		int w=170, m=-422, p=+422; 
+		ambientLight(w,w,w); 
+		directionalLight(w, w, w, m, m, m); 
+		directionalLight(w, w, w, p, p, p); 
+		directionalLight(w, w, w, m, m, p); 
+		directionalLight(w, w, w, p, p, m); 
+	} 
 
 	public void initAll() {
 		state = CHARGEMENT;
 		waitScreen.init();
-		
+
 	}
-	
+
 	public void setPlayer1(PlayerControler p) {
 		player1 = p;
 	}
-	
+
 	public void setPlayer2(PlayerControler p) {
 		player2 = p;
 	}
-	
+
 	public void setMenuControler(MenuControler m) {
 		menuControler = m;
 	}
-	
+
 	public void setOptionsControler(OptionsControler o) {
 		optionsControler = o;
 	}
@@ -78,11 +96,12 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	public void draw(){
+		clear();
 		if (state == CHARGEMENT) {
 			if (!waitScreen.nextStep())
 				state = WAITING_PLAYER;
 			waitScreen.display();
-			
+
 		}
 		if (state == WAITING_PLAYER) { // on attend d'avoir les deux joueurs 
 			if (!menuControler.display()) {
@@ -93,15 +112,17 @@ public class GlitchesBattle extends PApplet {
 			optionsControler.display();	
 		} else if(state == IN_GAME){ // début du combat
 			gameControler.display();
-			if (gameControler.getModel().isGameFinish()) { // TODO
+			if (gameControler.getModel().isGameFinish()) {
 				state = END_SCREEN;
 				gameControler.isGameFinish(true);
 			}
 			player1.update();
 			player2.update();
 		} else if (state == END_SCREEN) {
+			lights();
 			gameControler.display();
 		} else if (state == PAUSE) {
+			lights();
 			gameControler.display();
 		}
 	}
@@ -144,18 +165,19 @@ public class GlitchesBattle extends PApplet {
 				}
 			}
 		} else if (state == IN_GAME && !gameControler.isDecompting()) {
-			int increment = 10;
+			
+			if(!allAnimationFinished)
+				return;
 			// PLAYER 1
 			if (key  == 'z' || key == 'Z') {
 				//player1.setZ(player1.getModel().getZ()-100);
-				player1.move(0, 0, -increment);
+				player1.move(0, 0, -INCREMENT);
 			} else if (key  == 'q' || key == 'Q') {
-				player1.move(-increment, 0, 0);
+				player1.move(-INCREMENT, 0, 0);
 			} else if (key  == 'd' || key == 'D') {
-				player1.move(increment, 0, 0);
+				player1.move(INCREMENT, 0, 0);
 			} else if (key  == 's' || key == 'S') {
-				//player1.setZ(player1.getModel().getZ()+100);
-				player1.move(0, 0, increment);
+				player1.move(0, 0, INCREMENT);
 			} else if (key == 'a' || key == 'A') {
 				player1.hit();
 			}  else if (key == 'e' || key == 'E') {
@@ -163,14 +185,13 @@ public class GlitchesBattle extends PApplet {
 			} // PLAYER 2
 			else if (key  == 'i' || key == 'I') {
 				//player2.setZ(player2.getModel().getZ()-100);
-				player2.move(0, 0, -increment);
+				player2.move(0, 0, -INCREMENT);
 			} else if (key  == 'j' || key == 'J') {
-				player2.move(-increment, 0, 0);
+				player2.move(-INCREMENT, 0, 0);
 			} else if (key  == 'l' || key == 'L') {
-				player2.move(increment, 0, 0);
+				player2.move(INCREMENT, 0, 0);
 			} else if (key  == 'k' || key == 'K') {
-				player2.setZ(player2.getModel().getZ()+100);
-				player2.move(0, 0, increment);
+				player2.move(0, 0, INCREMENT);
 			} else if (key == 'u' || key == 'U') {
 				player2.hit();
 			}  else if (key == 'o' || key == 'O') {
@@ -190,7 +211,7 @@ public class GlitchesBattle extends PApplet {
 			}
 		}
 	}
-	
+
 	public void keyReleased() {
 		if (state != WAITING_PLAYER) {
 			int increment = 10;
@@ -217,12 +238,8 @@ public class GlitchesBattle extends PApplet {
 		}
 	}
 
-	public int getC() {
-		return cam;
-	}
-
 	public void stop() {
-		
+
 		super.stop();
 	}
 
