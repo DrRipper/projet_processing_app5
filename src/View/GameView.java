@@ -14,12 +14,12 @@ public class GameView {
 	private PImage imgInfini;
 	private PImage imgBackground;
 	private static Son son;
-	
+
 	private boolean in_pause;
 
 	private Game my_model;
 
-	private Scene my_scene;
+	static private Scene my_scene = null;
 
 	private PlayerControler player1;
 	private PlayerControler player2;
@@ -30,14 +30,17 @@ public class GameView {
 	private int last_time;
 
 	private boolean finish;	
-	
+	static private PFont my_font = null;
+
 	private static Son son_countDown;
 
 	public GameView(Game model, PlayerControler p1, PlayerControler p2) {
 		in_pause = false;
 		finish = false;
 		my_model = model;
-		my_scene = new Scene(my_model.getParent());
+		//my_scene = new Scene(my_model.getParent());
+		if (my_scene == null)
+			my_scene = new Scene(my_model.getParent());
 		son = new Son(((GlitchesBattle)my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/fight.mp3");
 		player1 = p1;
 		player2 = p2;
@@ -72,9 +75,22 @@ public class GameView {
 			displayDecompte();
 
 		// placement des deux personnages
-		boolean animation1Finished = player1.getView().displayPlayer();
-		boolean animation2Finished = player2.getView().displayPlayer();
-		
+		boolean animation1Finished;
+		boolean animation2Finished;
+		my_model.getParent().hint(my_model.getParent().DISABLE_DEPTH_TEST);
+		//my_model.getParent().hint(my_model.getParent().ENABLE_DEPTH_SORT);
+		if(player1.getModel().getZ()<player2.getModel().getZ()) {
+			animation1Finished = player1.getView().displayPlayer();
+			animation2Finished = player2.getView().displayPlayer();
+		} else {
+			animation2Finished = player2.getView().displayPlayer();
+			animation1Finished = player1.getView().displayPlayer();
+		}
+
+		//my_model.getParent().hint(my_model.getParent().DISABLE_DEPTH_SORT);
+		my_model.getParent().hint(my_model.getParent().ENABLE_DEPTH_TEST);
+
+
 		my_model.getParent().hint(my_model.getParent().DISABLE_DEPTH_TEST);
 		my_model.getParent().textMode(my_model.getParent().MODEL);
 		my_model.getParent().fill(0, 153, 255);
@@ -86,15 +102,16 @@ public class GameView {
 			displayDecompte();
 		my_model.getParent().hint(my_model.getParent().ENABLE_DEPTH_TEST);
 
-		
+
 		return (animation1Finished && animation2Finished);	
 	}
 
 	private void display_end_screen() {		
-		
+
 		int id = my_model.getWinner();
-		PFont font = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",100,true);
-		my_model.getParent().textFont(font);
+		if (my_font == null)
+			my_font = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",100,true);
+		my_model.getParent().textFont(my_font);
 		if (id == 0)
 			my_model.getParent().text("Equality !", (my_model.getParent().width/2), (my_model.getParent().height/2)-100, 100);
 		else
@@ -131,7 +148,7 @@ public class GameView {
 	}
 
 	public void displayDecompte() {
-	
+
 		if (!son_countDown.getMusicMenu().isPlaying())
 			son_countDown.getMusicMenu().play(0);
 

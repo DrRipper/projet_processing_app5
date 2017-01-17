@@ -29,9 +29,9 @@ public class Son {
 
 	}
 
-	public AudioInput getVoice() {
-		return minim.getLineIn(Minim.STEREO, 512);
-	}
+	/*public AudioInput getVoice() {
+		return minim.getLineIn(Minim.MONO , 512);
+	}*/
 
 	public void stop() {
 		music.close();

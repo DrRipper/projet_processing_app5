@@ -22,15 +22,15 @@ public class Player {
 	private float my_z_initial;
 
 	private PApplet my_parent;
-	
+
 	// TODO : int ?
 	private float my_x;
 	private float my_y;
 	private float my_z;
-	
+
 	private float x_meteor;
 	private float y_meteor;
-	
+
 	private int deltaX;
 	private int deltaY;
 
@@ -52,31 +52,12 @@ public class Player {
 	public Player(PApplet p, int idx, PlayerControler control) {
 		my_parent = p;
 		my_idx = idx;
-		my_health = MAX_HEALTH;
-		my_validity = false;
-		my_mana = 0;
 		controler = control;
-
-		my_y_initial = 800;//((float)my_parent.height)*0.75f; -45
 		
-		if(my_idx==1)
-			my_x_initial = 580;
-		else
-			my_x_initial = 780;
-
-		my_z_initial = 220;
-				
-		my_x = my_x_initial;
-		my_y = my_y_initial;
-		my_z = my_z_initial;
-
-		x_meteor = ((float)my_parent.width)*0.25f*(1-my_idx);
-		y_meteor = 0;
-
 		my_height = 100;
 		my_width = 100;
 
-		if (idx == 1) {
+		if (my_idx == 1) {
 			color = RED;
 			right = true;
 		}
@@ -84,9 +65,34 @@ public class Player {
 			color = BLUE;
 			right = false;
 		}
+		initRound();
+		
+	}
+	
+	public void initRound() {
+		my_health = MAX_HEALTH;
+		my_validity = false;
+		my_mana = 0;
+		my_y_initial = 800;//((float)my_parent.height)*0.75f; -45
 
+		if(my_idx==1)
+			my_x_initial = 580;
+		else
+			my_x_initial = 780;
+
+		my_z_initial = 220;
+
+		my_x = my_x_initial;
+		my_y = my_y_initial;
+		my_z = my_z_initial;
+
+		x_meteor = ((float)my_parent.width)*0.25f*(1-my_idx);
+		y_meteor = 0;
 		initBox();
-
+	}
+	
+	public void newRound() {
+		
 	}
 
 	public int getIdx() {
@@ -107,23 +113,25 @@ public class Player {
 	}
 
 	public void setX(float x) {
-		if (x>=0 && x<=my_parent.width-my_width )
-			if (!collision_with_ennemie(true, x, my_y))
+		if (x>=0 && x<=my_parent.width-my_width ) {
+			if (!collision_with_ennemie(true, x, my_y, my_z))
 				my_x = x;
+		}
 	}
 
 	public void setY(float y) {
 		if (y>=0 && y<=my_parent.height-my_height)
-			if (!collision_with_ennemie(true, my_x, y))
+			if (!collision_with_ennemie(true, my_x, y, my_z))
 				my_y = y;
 	}
 
 	public void setZ(float z) {
 		if (z>=-40 && z<=460)
-			if (!collision_with_ennemie(true, my_x, my_y))
+			if (!collision_with_ennemie(true, my_x, my_y, z))
 				my_z = z;
+
 	}
-	
+
 	public int getX() {
 		return  Math.round(my_x);
 	}
@@ -131,7 +139,7 @@ public class Player {
 	public int getY() {
 		return  Math.round(my_y);
 	}
-	
+
 	public int getZ() {
 		return  Math.round(my_z);
 	}
@@ -174,10 +182,12 @@ public class Player {
 		return my_mana;
 	}
 
-	public boolean collision_with_ennemie(boolean duringWalking, float x, float y) {
-		if (my_z != my_ennemie.getZ())
-			return false;
-		return getBounds(duringWalking, x, y).intersects(my_ennemie.getBounds(duringWalking, my_ennemie.getX(), my_ennemie.getY()));
+	public boolean collision_with_ennemie(boolean duringWalking, float x, float y, float z) {
+		if(duringWalking) {
+			return (z == my_ennemie.getZ() && getBounds(duringWalking, x, y).intersects(my_ennemie.getBounds(duringWalking, my_ennemie.getX(), my_ennemie.getY())));
+		}else
+			return (my_z == my_ennemie.getZ() && getBounds(duringWalking, x, y).intersects(my_ennemie.getBounds(duringWalking, my_ennemie.getX(), my_ennemie.getY())));
+
 	}
 
 	public Rectangle getBounds(boolean duringWalking, float x, float y) {
@@ -229,20 +239,20 @@ public class Player {
 	public PlayerView getView() {
 		return controler.getView();
 	}
-	
+
 	public void update() {
 		my_x += deltaX;
 		my_y += deltaY;
 		hitbox.update((int)my_x, (int)my_y);
 		if (hurting) {
 			hurtbox.update((int)my_x, (int)my_y);
-	    }
+		}
 	}
 
 	public int getX_meteor() {
 		return Math.round(x_meteor);
 	}
-	
+
 	public int getY_meteor() {
 		return Math.round(y_meteor);
 	}

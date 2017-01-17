@@ -163,6 +163,7 @@ public class PlayerView {
 			else if (idx_curseur_voix+increment_voix<0)
 				increment_voix = 20;
 
+			System.out.println(in);
 			if((int)(in.left.level() * 100)>9)
 			{
 				if(idx_curseur_voix>=250 && idx_curseur_voix<=350)
@@ -193,9 +194,13 @@ public class PlayerView {
 		}
 		my_model.getParent().hint(my_model.getParent().ENABLE_DEPTH_TEST);
 
-		return lastFrame;
+		return currentAnim.equals(anims.get("slash"));
 	}
 
+	public boolean getCurrentAnimIsSlash() {
+		return currentAnim.equals(anims.get("slash"));
+	}
+	
 	// loopable anims
 	public void idle() {
 		lastAnim = currentAnim = anims.get("idle");
@@ -241,9 +246,10 @@ public class PlayerView {
 		increment_voix = 20;
 		voice = value;
 		meteor = value;
-
-		in = recording.getVoice();
-
+		System.out.println("MONITORING :!!!");
+		//in = recording.getVoice();
+		in = ((GlitchesBattle)my_model.getParent()).getAudioInput();
+		
 		if ( in.isMonitoring() )
 		{
 			in.disableMonitoring();

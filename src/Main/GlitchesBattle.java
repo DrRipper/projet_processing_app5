@@ -6,6 +6,7 @@ import Controler.PlayerControler;
 import Controler.WiimoteController;
 import Model.Son;
 import View.WaitScreen;
+import ddf.minim.AudioInput;
 import ddf.minim.Minim;
 import processing.core.PApplet;
 import wiiusej.WiiUseApiManager;
@@ -17,11 +18,11 @@ public class GlitchesBattle extends PApplet {
 	private final static int CHARGEMENT = 1;
 	private final static int WAITING_PLAYER = 2;
 	private final static int OPTIONS_SETTINGS = 3;
-	private final static int IN_GAME = 4;
+	public final static int IN_GAME = 4;
 	private final static int END_SCREEN = 5;
-	private final static int PAUSE = 6;
+	public final static int PAUSE = 6;
 
-	private final static int INCREMENT = 10;
+	private final static int INCREMENT = 7;
 
 	private PlayerControler player1;
 	private PlayerControler player2;
@@ -44,6 +45,8 @@ public class GlitchesBattle extends PApplet {
 	private double angle_joystic; 
 	private double magnitude_joystick;
 	private boolean animationHitIsFinished;
+	
+	private AudioInput input;
 	
 	public static void main(String[] args) {
 		//PApplet.main(new String[] { "--present", "projet_graphisme.Game"});
@@ -70,8 +73,13 @@ public class GlitchesBattle extends PApplet {
 		wiimote.addWiiMoteEventListeners(new WiimoteController(this));
 		
 		minim = new Minim(this);
+		input = minim.getLineIn();
 		waitScreen = new WaitScreen(this);
 		allAnimationFinished = true;
+	}
+	
+	public AudioInput getAudioInput() {
+		return input;
 	}
 
 	public void lights() { 
@@ -85,6 +93,22 @@ public class GlitchesBattle extends PApplet {
 	} 
 
 	public void initAll() {
+		gameControler.stop();
+		player1.getView().stopMusic();
+		player2.getView().stopMusic();
+		menuControler.stop();
+		minim.stop();
+		
+		gameControler = null;
+		//player1 = null;
+		//player2 = null;
+		menuControler = null;
+		
+		//System.gc();
+		
+		minim = new Minim(this);
+		wiimotes = WiiUseApiManager.getWiimotes(1, true);
+		Wiimote wiimote = wiimotes[0];
 		state = CHARGEMENT;
 		waitScreen.init();
 
@@ -128,7 +152,8 @@ public class GlitchesBattle extends PApplet {
 			optionsControler.display();	
 		} else if(state == IN_GAME){ // début du combat
 			gameControler.display();
-			mouvement();
+			if(!player1.getView().getCurrentAnimIsSlash() && !player2.getView().getCurrentAnimIsSlash())
+				mouvement();
 			if (gameControler.getModel().isGameFinish()) {
 				state = END_SCREEN;
 				gameControler.isGameFinish(true);
@@ -161,7 +186,14 @@ public class GlitchesBattle extends PApplet {
 		} else if (state == IN_GAME && !gameControler.isDecompting()) {
 			if (id==1)
 				player1.magicalHit();
+		} else if (state == END_SCREEN) {
+			initAll();
+		} else if (state == PAUSE) {
+			state = IN_GAME;
+			gameControler.setPauseState(false);
 		}
+		
+		
 	}
 	
 	public GameControler getGameControler() {
@@ -209,11 +241,15 @@ public class GlitchesBattle extends PApplet {
 	}
 
 	public void mouvement(){
-		if (!gameControler.isDecompting()) {
-			if (angle_joystic<110 && angle_joystic>70 && magnitude_joystick > 0.2)
+		if (gameControler != null && !gameControler.isDecompting()) {
+			if (angle_joystic<=110 && angle_joystic>=70 && magnitude_joystick > 0.2)
 				player1.move(7, 0, 0);
-			else if (angle_joystic<290 && angle_joystic>250 && magnitude_joystick > 0.2)
+			else if (angle_joystic<=290 && angle_joystic>=250 && magnitude_joystick > 0.2)
 				player1.move(-7, 0, 0);
+			else if (((angle_joystic<70 && angle_joystic>=0) || (angle_joystic<=360 && angle_joystic>290)) && magnitude_joystick > 0.2)
+				player1.move(0, 0, -7);
+			else if (angle_joystic>110 && angle_joystic<250 && magnitude_joystick > 0.2)
+				player1.move(0, 0, 7);
 			else
 				player1.idle();
 		}
@@ -343,12 +379,12 @@ public class GlitchesBattle extends PApplet {
 		return state;
 	}
 	
-	public void setAngle(double d) {
-		angle_joystic = d;
-	}
-	
-	public void setMagnitude(double d) {
-		magnitude_joystick = d;
+	public void setAngle_and_Maginitude(double a, double m) {
+		//if(!allAnimationFinished)
+		//	return;
+		angle_joystic = a;
+		magnitude_joystick = m;
+		
 	}
 	
 	public void hit() {
@@ -363,6 +399,11 @@ public class GlitchesBattle extends PApplet {
 	
 	public boolean getAnimationHitState() {
 		return animationHitIsFinished;
+	}
+
+	public void setState(int s) {
+		state = s;
+		
 	}
 
 	/*public void isButtonReleased() {

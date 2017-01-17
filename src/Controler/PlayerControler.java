@@ -12,9 +12,15 @@ public class PlayerControler {
 	private static Son son_damaged;
 	
 	public PlayerControler(PApplet p, int idx) {
+		System.out.println("PLAYER CONTROLER CONSTRUCTOR");
 		my_model = new Player(p, idx, this);
 		my_view = new PlayerView(my_model);
 		son_damaged = new Son(((GlitchesBattle) p).getMinim(), p, "../ressources/hurt.wav");
+	}
+	
+	public void initRound() {
+		my_model.initRound();
+		idle();
 	}
 
 	public void setEnnemie(PlayerControler p) {
@@ -59,10 +65,9 @@ public class PlayerControler {
 
 		son_damaged.getMusicMenu().play();
 		my_view.slash();
-		
-		if(my_model.getZ()==my_model.getEnnemie().getZ() && my_model.hurtbox.collision(my_model.getEnnemie().hitbox)) {
+
+		if(my_model.getZ()<my_model.getEnnemie().getZ()+10 && my_model.getZ()>my_model.getEnnemie().getZ()-10 && my_model.hurtbox.collision(my_model.getEnnemie().hitbox)) {
 	    	  my_model.getEnnemie().controler.getView().hurt();
-	 
 	    	  if (my_model.get_mana()+5<Player.MAX_MANA)
 					my_model.set_mana(my_model.get_mana()+5);
 				else 

@@ -25,12 +25,16 @@ public class WaitScreen {
 		my_parent.textFont(font);
 		logo = my_parent.loadImage("../ressources/logo.png");
 		da = (logo.width*3f)/5;
+		player1 = null;
+		player2 = null;
 	}
 	
 	public void init() {
 		avancement = 0;
 		step = 0;
 		my_parent.textFont(font);
+		
+		
 	}
 
 	public void display() {
@@ -50,13 +54,19 @@ public class WaitScreen {
 	public boolean nextStep() {
 		switch (step) {
 		case 1: {
-			player1 = new PlayerControler(my_parent, 1);
+			if (player1 == null)
+				player1 = new PlayerControler(my_parent, 1);
+			else
+				player1.initRound();
 			avancement += da;
 			step++;
 			return true;
 		}
 		case 2: {
-			player2 = new PlayerControler(my_parent, 3); 
+			if (player2 == null)
+				player2 = new PlayerControler(my_parent, 3);
+			else
+				player2.initRound();
 			avancement += da;
 			step++;
 			return true;
