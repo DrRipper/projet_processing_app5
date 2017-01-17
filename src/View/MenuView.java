@@ -11,7 +11,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 
 public class MenuView {
-	private static Son son_music;
+	private static Son son_music = null;
 	private Menu my_model;
 	private PFont font_title;
 	private PFont font_state;
@@ -39,7 +39,9 @@ public class MenuView {
 		player1 = p1;
 		player2 = p2;
 
-		son_music = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/music.mp3");
+		//if (son_music == null)
+			son_music = new Son(((GlitchesBattle) my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/music.mp3");
+		son_music.play();
 		
 		font_title = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",100,true);
 		font_state = my_model.getParent().createFont("../ressources/Sketch Gothic School.ttf",50,true);

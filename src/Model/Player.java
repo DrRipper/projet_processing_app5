@@ -33,6 +33,7 @@ public class Player {
 
 	private int deltaX;
 	private int deltaY;
+	private int deltaZ;
 
 	private int my_height;
 	private int my_width;
@@ -227,11 +228,10 @@ public class Player {
 		setX(my_x + dx);
 		setY(my_y + dy);
 		setZ(my_z + dz);
-		//my_x += dx;
-		//my_y += dy;
-		//my_z += dz;
+		deltaX = dx;
+		deltaY = dy;
+		deltaZ = dz;
 
-		// tester vitesse ? moving?
 		if ((right && dx<0) || (!right && dx>0))
 			changerSens();
 	}

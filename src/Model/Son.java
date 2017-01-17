@@ -14,10 +14,8 @@ public class Son {
 	public Son(Minim m, PApplet p, String title) {
 		my_parent = p;
 		minim = m;
-		music = minim.loadFile(title); // ajouter de la music au jeu
+		music = minim.loadFile(title); //ajouter de la music au jeu
 		//music.mute();
-
-		
 	}
 	
 	public Son(Minim m) {
@@ -34,9 +32,18 @@ public class Son {
 	}*/
 
 	public void stop() {
-		music.close();
+		//music.close();
 		//minim.stop();
+		//music.setVolume(0);
+		//minim.stop();
+		music.close();
+		//System.out.println("STOP MUSIQUE");
 	}
+	
+	public void play() {
+		music.play(0);
+	}
+	
 
 }
 

@@ -41,7 +41,9 @@ public class GameView {
 		//my_scene = new Scene(my_model.getParent());
 		if (my_scene == null)
 			my_scene = new Scene(my_model.getParent());
-		son = new Son(((GlitchesBattle)my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/fight.mp3");
+		//if (son == null)
+			son = new Son(((GlitchesBattle)my_model.getParent()).getMinim(), my_model.getParent(), "../ressources/fight.mp3");
+		son.play();
 		player1 = p1;
 		player2 = p2;
 		imgInfini = my_model.getParent().loadImage("../ressources/icon_infini.png");
@@ -180,7 +182,11 @@ public class GameView {
 				my_model.getParent().text(last_time, (my_model.getParent().width/2), 40);
 			else {
 				int elapsed = decompte ? 0:my_model.getParent().millis() - my_model.getStartTime();
-				my_model.getParent().text(maxTime - (elapsed) / 1000, (my_model.getParent().width/2), 40); 
+				int t = maxTime - (elapsed) / 1000;
+				Integer sec = t%60;
+				Integer min = t/60;
+				String time = min.toString() +":"+sec.toString();
+				my_model.getParent().text(time, (my_model.getParent().width/2), 40); 
 				if((maxTime - (elapsed) / 1000)==0)
 					my_model.timeIsFinish();
 			}

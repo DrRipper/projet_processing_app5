@@ -163,7 +163,7 @@ public class PlayerView {
 			else if (idx_curseur_voix+increment_voix<0)
 				increment_voix = 20;
 
-			System.out.println(in);
+			//System.out.println(in);
 			if((int)(in.left.level() * 100)>9)
 			{
 				if(idx_curseur_voix>=250 && idx_curseur_voix<=350)
@@ -185,7 +185,7 @@ public class PlayerView {
 		if (meteor && !voice) {			
 			int xm = my_model.getX()-250;
 			int ym = my_model.getY()-350;
-
+			my_model.getEnnemie().getView().slashjump();
 			boolean lastFrameMeteor = sens(anims.get("meteor")).display(xm,ym, my_model.getZ()+10);
 			if (lastFrameMeteor) {
 				meteor = false;

@@ -72,8 +72,8 @@ public class Options {
 
 	public Integer getTimeSelected() {
 		if (list_options[0][list_selected_values[0]]=="Set time") {
-			String time = timeSelected[0]+timeSelected[1]+":"+timeSelected[2]+timeSelected[3]; // format 00:00
-			return new Integer(Integer.parseInt(time.split(":")[1])+Integer.parseInt(time.split(":")[0])*60);
+			int t = (timeSelected[0]*10+timeSelected[1])*60+timeSelected[2]*10+timeSelected[3];
+			return t;
 		}
 		return null;
 	}

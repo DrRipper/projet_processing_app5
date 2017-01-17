@@ -108,7 +108,7 @@ public class GlitchesBattle extends PApplet {
 		
 		minim = new Minim(this);
 		wiimotes = WiiUseApiManager.getWiimotes(1, true);
-		Wiimote wiimote = wiimotes[0];
+		//Wiimote wiimote = wiimotes[0];
 		state = CHARGEMENT;
 		waitScreen.init();
 
